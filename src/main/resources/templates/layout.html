@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="vi" >
+<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" th:inline="text">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,7 +50,7 @@
             <!-- Menu ADMIN -->
             <div id="menu-admin">
                 <h6 class="text-light mt-3">👑 Admin</h6>
-                <a href="#">➕ Thêm người dùng</a>
+                <a href="/admin/create/user">➕ Thêm người dùng</a>
                 <a href="#">✏️ Chỉnh sửa người dùng</a>
                 <a href="#">⚡ Quản lý Role</a>
                 <a href="#">🗑️ Xóa / Khôi phục người dùng</a>
@@ -60,15 +61,12 @@
                 <a href="#">📑 Quản lý phiếu mượn</a>
             </div>
             <hr>
-            <a href="#" class="text-danger">🚪 Đăng xuất</a>
+            <a href="/auth/logout" class="text-danger">🚪 Đăng xuất</a>
         </nav>
 
         <!-- Nội dung chính -->
         <main class="col-md-9 col-lg-10">
-            <div class="content">
-                <h2>Chào mừng đến hệ thống quản lý thư viện</h2>
-                <p>Vui lòng chọn chức năng ở menu bên trái.</p>
-            </div>
+            <div layout:fragment="content"></div>
         </main>
     </div>
 </div>
