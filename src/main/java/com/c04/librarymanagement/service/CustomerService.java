@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,14 @@ public class CustomerService {
                 .birthDate(dto.getBirthDate())
                 .deleted(false)
                 .build();
+    }
+
+    public CustomerDTO getAllCustomers (){
+        return customerRepository.findAll()
+                .stream()
+                .map(this::toDTO)
+                .toList()
+                .get(0);
     }
 
     // Thêm khách hàng
@@ -114,5 +123,14 @@ public class CustomerService {
     public Page<CustomerDTO> getDeletedCustomersPage(Pageable pageable) {
         return customerRepository.findByDeletedTrue(pageable)
                 .map(this::toDTO);
+    }
+
+    public List<CustomerDTO> searchByNameOrCode(String keyword) {
+        return customerRepository.findAll().stream()
+                .filter(c -> !c.getDeleted())
+                .filter(c -> c.getName().toLowerCase().contains(keyword.toLowerCase())
+                        || c.getCode().toLowerCase().contains(keyword.toLowerCase()))
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 }

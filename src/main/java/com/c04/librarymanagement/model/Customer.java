@@ -3,8 +3,6 @@ package com.c04.librarymanagement.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-
 import java.time.LocalDate;
 
 @Entity
@@ -13,8 +11,9 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-public class Customer extends BaseEntity {
+@Builder
+public class Customer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,4 +31,12 @@ public class Customer extends BaseEntity {
     private String address;
 
     private LocalDate birthDate;
+
+    @Column(nullable = false)
+    private Boolean deleted = false;
+
+    @Column(updatable = false)
+    private java.time.LocalDateTime createdAt = java.time.LocalDateTime.now();
+
+    private java.time.LocalDateTime updatedAt = java.time.LocalDateTime.now();
 }
