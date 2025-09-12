@@ -1,0 +1,24 @@
+
+<body>
+<h1>Danh sách khách hàng</h1>
+<a th:href="@{/admin/customers/create}">Thêm khách hàng</a>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Mã KH</th>
+        <th>Tên</th>
+        <th>Lớp</th>
+        <th>Địa chỉ</th>
+        <th>Ngày sinh</th>
+    </tr>
+    <tr th:each="c : ${customers}">
+        <td th:text="${c.id}"></td>
+        <td th:text="${c.code}"></td>
+        <td th:text="${c.name}"></td>
+        <td th:text="${c.schoolClass}"></td>
+        <td th:text="${c.address}"></td>
+        <td th:text="${c.birthDate}"></td>
+    </tr>
+</table>
+</body>
+</html>

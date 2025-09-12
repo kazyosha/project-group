@@ -1,26 +1,21 @@
-package com.c04.librarymanagement.model;
+package com.c04.librarymanagement.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "customers")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-public class Customer extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Builder
+public class CustomerDTO {
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @NotBlank
     private String code;
+
     @NotBlank
     private String name;
 
