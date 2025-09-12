@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,10 +44,10 @@
 <body>
 <div class="login-box">
     <h3>📚 Đăng nhập</h3>
-    <form action="/login" method="post">
+    <form th:action="@{/auth/login}" method="post">
         <div class="mb-3">
             <label for="username" class="form-label">Tên đăng nhập</label>
-            <input type="text" class="form-control" id="username" name="username" placeholder="Nhập tên đăng nhập" required>
+            <input type="text" class="form-control" id="username" name="email" placeholder="Nhập tên đăng nhập" required>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Mật khẩu</label>
@@ -61,6 +61,9 @@
             <a href="#" class="text-decoration-none">Quên mật khẩu?</a>
         </div>
         <button type="submit" class="btn btn-custom w-100">Đăng nhập</button>
+        <div th:if="${param.error}">
+            <p style="color:red">Invalid email or password</p>
+        </div>
     </form>
     <p class="text-center mt-3">Chưa có tài khoản? <a href="#" class="text-decoration-none">Đăng ký</a></p>
 </div>
