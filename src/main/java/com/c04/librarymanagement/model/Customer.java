@@ -19,13 +19,16 @@ public class Customer extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, length = 20)
     private String code;
-    @NotBlank
+
+    @Column(nullable = false, length = 100)
     private String name;
 
+    @Column(length = 100)
     private String schoolClass;
 
+    @Column(length = 255)
     private String address;
 
     private LocalDate birthDate;
