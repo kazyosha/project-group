@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout-admin}">
+<head>
+    <meta charset="UTF-8">
+    <title>Tạo người dùng mới - Admin</title>
+</head>
+<body>
+<div layout:fragment="content" class="content">
+    <div class="container">
+        <h2 class="mb-4">➕ Tạo người dùng mới</h2>
+
+        <form th:action="@{/admin/users/create}" th:object="${user}" method="post">
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên đầy đủ</label>
+                <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nhập tên đầy đủ" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Nhập email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Nhập mật khẩu" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="role" class="form-label">Vai trò</label>
+                <select th:field="*{role}" class="form-select" id="role" required>
+                    <option value="" disabled selected>Chọn vai trò</option>
+                    <option value="USER">USER</option>
+                    <option value="LIBRARIAN">LIBRARIAN</option>
+                    <option value="ADMIN">ADMIN</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Tạo người dùng</button>
+            <a th:href="@{/admin/users}" class="btn btn-secondary">Hủy</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>
