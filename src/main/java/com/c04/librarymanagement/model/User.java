@@ -13,13 +13,15 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class User extends BaseEntity {
+@Builder // Giữ Builder nếu muốn tạo object dễ dàng
+public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
+    @Column(nullable = false)
     private String name;
 
     private LocalDate birthDate;
@@ -33,9 +35,18 @@ public class User extends BaseEntity {
     private String avatar;
 
     @NotBlank
+    @Column(nullable = false)
     private String password;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
+
+    @Column(nullable = false)
+    private Boolean deleted = false;
+
+    @Column(updatable = false)
+    private java.time.LocalDateTime createdAt = java.time.LocalDateTime.now();
+
+    private java.time.LocalDateTime updatedAt = java.time.LocalDateTime.now();
 }

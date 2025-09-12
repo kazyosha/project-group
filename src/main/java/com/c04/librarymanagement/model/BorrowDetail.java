@@ -11,16 +11,18 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class BorrowDetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Quan hệ n-1 với BorrowRecord
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "borrow_record_id")
+    @JoinColumn(name = "borrow_record_id", nullable = false)
     private BorrowRecord borrowRecord;
 
+    // Quan hệ n-1 với Book
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 }
-
