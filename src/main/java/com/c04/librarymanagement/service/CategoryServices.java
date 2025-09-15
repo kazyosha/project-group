@@ -3,6 +3,8 @@ package com.c04.librarymanagement.service;
 import com.c04.librarymanagement.dto.CategoryDTO;
 import com.c04.librarymanagement.model.Category;
 import com.c04.librarymanagement.repository.CategoryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,11 +18,9 @@ public class CategoryServices {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<CategoryDTO> findAll() {
-        return categoryRepository.findAll()
-                .stream()
-                .map(c -> new CategoryDTO(c.getId(), c.getName()))
-                .toList();
+    public Page<CategoryDTO> findAll(Pageable pageable) {
+        return categoryRepository.findAll(pageable)
+                .map(c -> new CategoryDTO(c.getId(), c.getName()));
     }
 
     public CategoryDTO findById(Long id) {

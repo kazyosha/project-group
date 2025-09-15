@@ -4,6 +4,8 @@ import com.c04.librarymanagement.dto.CategoryDTO;
 import com.c04.librarymanagement.service.CategoryServices;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,8 +22,13 @@ public class CategoryController {
     }
 
     @GetMapping("/categories")
-    public String list(Model model) {
-        model.addAttribute("categories", categoryServices.findAll());
+    public String list(
+            Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        Page<CategoryDTO> categoryPage = categoryServices.findAll(PageRequest.of(page, size));
+        model.addAttribute("categoryPage", categoryPage);
         return "admin/category/list";
     }
 

@@ -58,10 +58,10 @@ public class BorrowController {
         return "success";
     }
 
-    @GetMapping("/students/search")
+    @GetMapping("/borrows/customers/search")
     @ResponseBody
-    public List<CustomerDTO> searchStudents(@RequestParam("q") String query) {
-        return customerService.searchByNameOrCode(query);
+    public List<CustomerDTO> searchStudentsForBorrow(@RequestParam("q") String query) {
+        return customerService.searchActiveCustomersForBorrow(query);
     }
 
     @GetMapping("/borrows/search-list")
@@ -70,7 +70,7 @@ public class BorrowController {
             @RequestParam(required = false) BorrowStatus status,
             @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "5") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         return borrowService.searchBorrowRecords(status, keyword, pageable);
