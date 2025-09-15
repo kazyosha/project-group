@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout-admin}">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ Admin - Quản lý Thư viện</title>
+</head>
+<body>
+<div layout:fragment="content" class="content">
+    <div class="welcome text-center mb-4">
+        <h2>⚙️ Hệ thống Quản lý Thư viện - Admin</h2>
+        <p>Xin chào <strong>Admin</strong> 👋 — Hãy theo dõi tình trạng hệ thống!</p>
+    </div>
+
+    <!-- Thống kê nhanh -->
+    <div class="row text-center mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white p-3">
+                <h4>50</h4>
+                <p>Người dùng</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white p-3">
+                <h4>5</h4>
+                <p>Quản trị viên</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark p-3">
+                <h4>200</h4>
+                <p>Hoạt động hôm nay</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white p-3">
+                <h4>3</h4>
+                <p>Cảnh báo</p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
