@@ -1,26 +1,41 @@
 //Search cho create book-loan
 $(document).ready(function() {
+    let timer;
+
     $('#studentInput').on('input', function() {
         const query = $(this).val();
-        if (query.length < 2) { $('#studentList').empty(); return; }
-        $.getJSON('/admin/students/search', { q: query }, function(data) {
-            let list = '';
-            data.forEach(s => {
-                list += `<li class="list-group-item list-group-item-action" data-id="${s.id}">${s.code} - ${s.name}</li>`;
+        clearTimeout(timer);
+
+        if (query.length < 2) {
+            $('#studentList').empty();
+            return;
+        }
+
+        timer = setTimeout(() => {
+            $.getJSON('/admin/borrows/customers/search', { q: query }, function(data) {
+                let list = '';
+                if (data.length > 0) {
+                    data.forEach(s => {
+                        list += `<li class="list-group-item list-group-item-action" data-id="${s.id}">${s.code} - ${s.name}</li>`;
+                    });
+                } else {
+                    list = '<li class="list-group-item text-muted">Không tìm thấy</li>';
+                }
+                $('#studentList').html(list);
             });
-            $('#studentList').html(list);
-        });
+        }, 300);
     });
 
-    $('#studentList').on('click', 'li', function() {
+    $('#studentList').on('mousedown', 'li', function(e) {
         const name = $(this).text();
         const id = $(this).data('id');
         $('#studentInput').val(name);
         $('#studentId').val(id);
         $('#studentList').empty();
+        e.preventDefault();
     });
 
-    $(document).click(function(e) {
+    $(document).on('click', function(e) {
         if (!$(e.target).closest('#studentInput, #studentList').length) {
             $('#studentList').empty();
         }

@@ -43,12 +43,11 @@ public class CustomerService {
                 .build();
     }
 
-    public CustomerDTO getAllCustomers (){
-        return customerRepository.findAll()
-                .stream()
+    public List<CustomerDTO> getAllCustomers() {
+        return customerRepository.findAll().stream()
+                .filter(c -> !c.getDeleted())  // chỉ lấy khách hàng còn hoạt động
                 .map(this::toDTO)
-                .toList()
-                .get(0);
+                .collect(Collectors.toList());
     }
 
     // Thêm khách hàng
@@ -139,8 +138,19 @@ public class CustomerService {
             return getCustomersPage(pageable);
         }
         return customerRepository
-                .findByDeletedFalseAndNameContainingIgnoreCaseOrDeletedFalseAndCodeContainingIgnoreCase(
-                        keyword, keyword, pageable)
+                .searchByNameOrCode(
+                        keyword, pageable)
                 .map(this::toDTO);
+    }
+
+    public List<CustomerDTO> searchActiveCustomersForBorrow(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return List.of();
+        }
+
+        List<Customer> customers = customerRepository
+                .findTop10ByDeletedFalseAndNameContainingIgnoreCaseOrDeletedFalseAndCodeContainingIgnoreCase(keyword, keyword);
+
+        return customers.stream().map(this::toDTO).collect(Collectors.toList());
     }
 }

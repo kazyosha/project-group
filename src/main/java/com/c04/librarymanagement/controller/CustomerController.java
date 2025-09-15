@@ -11,6 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/admin")
 public class CustomerController {
@@ -23,12 +26,12 @@ public class CustomerController {
 
     @GetMapping("/customers")
     public String listCustomers(Model model,
-                                @RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 10); // 10 record/trang
+                                @RequestParam(defaultValue = "1") int page) {
+        int pageIndex = page - 1;
+        Pageable pageable = PageRequest.of(pageIndex, 5);
         Page<CustomerDTO> customersPage = customerService.getCustomersPage(pageable);
 
         model.addAttribute("customers", customersPage.getContent());
-
         model.addAttribute("customersPage", customersPage);
         model.addAttribute("currentPage", page);
         return "/admin/customers/list";
@@ -37,7 +40,7 @@ public class CustomerController {
     @GetMapping("/customers/deleted")
     public String deletedCustomers(Model model,
                                    @RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 10); // 10 record/trang
+        Pageable pageable = PageRequest.of(page, 5);
         Page<CustomerDTO> deletedPage = customerService.getDeletedCustomersPage(pageable);
 
         model.addAttribute("customers", deletedPage.getContent());
@@ -112,9 +115,16 @@ public class CustomerController {
 
     @GetMapping("/customers/search")
     @ResponseBody
-    public Page<CustomerDTO> searchCustomersApi(@RequestParam(required = false) String keyword,
-                                                @RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-        return customerService.searchCustomers(keyword, pageable);
+    public Map<String, Object> searchCustomersApi(@RequestParam(required = false) String keyword,
+                                                  @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        Page<CustomerDTO> pageResult = customerService.searchCustomers(keyword, pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", pageResult.getContent());
+        response.put("number", pageResult.getNumber());
+        response.put("totalPages", pageResult.getTotalPages());
+        response.put("last", pageResult.isLast());
+        return response;
     }
 }

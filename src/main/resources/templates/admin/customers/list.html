@@ -32,27 +32,45 @@
         </tr>
         </thead>
         <tbody id="customersBody">
-
+        <tr th:each="c : ${customers}">
+            <td th:text="${c.id}"></td>
+            <td th:text="${c.code}"></td>
+            <td th:text="${c.name}"></td>
+            <td th:text="${c.schoolClass}"></td>
+            <td th:text="${c.address}"></td>
+            <td th:text="${c.birthDate}"></td>
+            <td class="text-center">
+                <a th:href="@{'/admin/customers/' + ${c.id} + '/edit'}"
+                   class="btn btn-sm btn-warning">✏️ Sửa</a>
+                <a th:href="@{'/admin/customers/' + ${c.id} + '/delete'}"
+                   class="btn btn-sm btn-danger"
+                   onclick="return confirm('Bạn có chắc muốn xóa khách hàng này không?')">🗑️ Xóa</a>
+            </td>
+        </tr>
         </tbody>
     </table>
 
     <!-- Pagination -->
     <nav th:if="${customersPage.totalPages > 1}">
         <ul class="pagination justify-content-center">
-            <li class="page-item" th:classappend="${customersPage.first} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/customers(page=${customersPage.number - 1})}">«</a>
+            <!-- Previous -->
+            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/customers(page=${currentPage - 1})}">«</a>
             </li>
 
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, customersPage.totalPages - 1)}"
-                th:classappend="${i == customersPage.number} ? 'active'">
-                <a class="page-link" th:href="@{/admin/customers(page=${i})}" th:text="${i + 1}">1</a>
+            <!-- Page numbers -->
+            <li class="page-item" th:each="i : ${#numbers.sequence(1, customersPage.totalPages)}"
+                th:classappend="${i == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/admin/customers(page=${i})}" th:text="${i}">1</a>
             </li>
 
-            <li class="page-item" th:classappend="${customersPage.last} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/customers(page=${customersPage.number + 1})}">»</a>
+            <!-- Next -->
+            <li class="page-item" th:classappend="${currentPage == customersPage.totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/customers(page=${currentPage + 1})}">»</a>
             </li>
         </ul>
     </nav>
+
 </div>
 
 <script src="/js/my.js"></script>

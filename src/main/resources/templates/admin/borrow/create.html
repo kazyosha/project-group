@@ -11,11 +11,11 @@
     <form th:action="@{/admin/borrows/create}" th:object="${borrow}" method="post">
 
         <!-- Sinh viên (autocomplete) -->
-        <div class="mb-3">
+        <div class="mb-3 position-relative">
             <label>Chọn sinh viên</label>
             <input type="text" id="studentInput" class="form-control" placeholder="Nhập tên hoặc mã sinh viên" autocomplete="off">
             <input type="hidden" name="customerId" th:field="*{customerId}" id="studentId">
-            <ul id="studentList" class="list-group position-absolute" style="z-index:1000;"></ul>
+            <ul id="studentList" class="list-group position-absolute w-100" style="z-index:1000; max-height:200px; overflow-y:auto;"></ul>
         </div>
 
         <!-- Chọn sách -->

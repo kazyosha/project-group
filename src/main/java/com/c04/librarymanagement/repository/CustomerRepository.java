@@ -15,6 +15,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Page<Customer> findByDeletedFalse(Pageable pageable);
     Page<Customer> findByDeletedTrue(Pageable pageable);
     List<Customer> findByDeletedTrue();
-    Page<Customer> findByDeletedFalseAndNameContainingIgnoreCaseOrDeletedFalseAndCodeContainingIgnoreCase(
-            String name, String code, Pageable pageable);
+    @Query("SELECT c FROM Customer c WHERE c.deleted = false AND (LOWER(c.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(c.code) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+    Page<Customer> searchByNameOrCode(@Param("keyword") String keyword, Pageable pageable);
+    List<Customer> findTop10ByDeletedFalseAndNameContainingIgnoreCaseOrDeletedFalseAndCodeContainingIgnoreCase(
+            String name, String code);
 }
