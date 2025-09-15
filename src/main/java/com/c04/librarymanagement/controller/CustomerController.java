@@ -24,7 +24,7 @@ public class CustomerController {
     @GetMapping("/customers")
     public String listCustomers(Model model,
                                 @RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 1); // 10 record/trang
+        Pageable pageable = PageRequest.of(page, 10); // 10 record/trang
         Page<CustomerDTO> customersPage = customerService.getCustomersPage(pageable);
 
         model.addAttribute("customers", customersPage.getContent());
@@ -44,20 +44,20 @@ public class CustomerController {
 
         model.addAttribute("customersPage", deletedPage);
         model.addAttribute("currentPage", page);
-        return "/admin/customers/deleted";
+        return "admin/customers/deleted";
     }
 
     @GetMapping("/customers/create")
     public String showAddForm(Model model) {
         model.addAttribute("customer", new CustomerDTO());
-        return "/admin/customers/create";
+        return "admin/customers/create";
     }
 
     @PostMapping("/customers/create")
     public String saveCustomer(@Valid @ModelAttribute("customer") CustomerDTO customerDTO,
                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/admin/customers/create";
+            return "admin/customers/create";
         }
         customerService.addCustomer(customerDTO);
         return "redirect:/admin/customers";
@@ -97,16 +97,24 @@ public class CustomerController {
         CustomerDTO customer = customerService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
         model.addAttribute("customer", customer);
-        return "/admin/customers/edit";
+        return "admin/customers/edit";
     }
 
     @PostMapping("/customers/update")
     public String updateCustomer(@Valid @ModelAttribute("customer") CustomerDTO dto,
                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/admin/customers/edit";
+            return "admin/customers/edit";
         }
         customerService.updateCustomer(dto);
         return "redirect:/admin/customers";
+    }
+
+    @GetMapping("/customers/search")
+    @ResponseBody
+    public Page<CustomerDTO> searchCustomersApi(@RequestParam(required = false) String keyword,
+                                                @RequestParam(defaultValue = "0") int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return customerService.searchCustomers(keyword, pageable);
     }
 }

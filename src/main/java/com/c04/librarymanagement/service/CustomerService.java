@@ -133,4 +133,14 @@ public class CustomerService {
                 .map(this::toDTO)
                 .collect(Collectors.toList());
     }
+
+    public Page<CustomerDTO> searchCustomers(String keyword, Pageable pageable) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getCustomersPage(pageable);
+        }
+        return customerRepository
+                .findByDeletedFalseAndNameContainingIgnoreCaseOrDeletedFalseAndCodeContainingIgnoreCase(
+                        keyword, keyword, pageable)
+                .map(this::toDTO);
+    }
 }

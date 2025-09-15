@@ -6,6 +6,8 @@ import com.c04.librarymanagement.model.*;
 import com.c04.librarymanagement.repository.BorrowRecordRepository;
 import com.c04.librarymanagement.repository.BookRepository;
 import com.c04.librarymanagement.repository.CustomerRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -117,6 +119,11 @@ public class BorrowService {
                                 .build())
                         .toList())
                 .build();
+    }
+
+    public Page<BorrowRecordDTO> searchBorrowRecords(BorrowStatus status, String keyword, Pageable pageable) {
+        Page<BorrowRecord> page = borrowRecordRepository.search(status, keyword, pageable);
+        return page.map(this::toDTO);
     }
 
 }
