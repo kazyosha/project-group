@@ -6,6 +6,9 @@ import com.c04.librarymanagement.model.BorrowStatus;
 import com.c04.librarymanagement.service.BookService;
 import com.c04.librarymanagement.service.BorrowService;
 import com.c04.librarymanagement.service.CustomerService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +33,7 @@ public class BorrowController {
     @GetMapping("/borrows")
     public String listBorrowRecords(Model model) {
         model.addAttribute("records", borrowService.getAllBorrowRecords());
-        return "/admin/borrow/list";
+        return "admin/borrow/list";
     }
 
     @GetMapping("/borrows/create")
@@ -38,7 +41,7 @@ public class BorrowController {
         model.addAttribute("borrow", new BorrowRecordDTO());
         model.addAttribute("customers", customerService.getAllCustomers());
         model.addAttribute("books", bookService.getAllBooks());
-        return "/admin/borrow/create";
+        return "admin/borrow/create";
     }
 
     @PostMapping("/borrows/create")
@@ -48,10 +51,11 @@ public class BorrowController {
     }
 
     @PostMapping("/borrows/{id}/status")
+    @ResponseBody
     public String updateStatus(@PathVariable("id") Long id,
                                @RequestParam("status") BorrowStatus status) {
         borrowService.updateStatus(id, status);
-        return "redirect:/admin/borrows";
+        return "success";
     }
 
     @GetMapping("/students/search")
@@ -59,4 +63,18 @@ public class BorrowController {
     public List<CustomerDTO> searchStudents(@RequestParam("q") String query) {
         return customerService.searchByNameOrCode(query);
     }
+
+    @GetMapping("/borrows/search-list")
+    @ResponseBody
+    public Page<BorrowRecordDTO> searchBorrowRecordsApi(
+            @RequestParam(required = false) BorrowStatus status,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        return borrowService.searchBorrowRecords(status, keyword, pageable);
+    }
+
+
 }
