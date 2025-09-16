@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" th:inline="text"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm Sách Mới</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="content">
+        <h2>📚 Thêm Sách Mới</h2>
+
+        <form th:action="@{/admin/books/create}" th:object="${book}" method="post" enctype="multipart/form-data">
+
+            <!-- Tên sách -->
+            <div class="mb-3">
+                <label class="form-label">Tên sách</label>
+                <input type="text" th:field="*{title}" class="form-control"/>
+                <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+            </div>
+
+            <!-- Mô tả -->
+            <div class="mb-3">
+                <label class="form-label">Mô tả</label>
+                <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
+                <div class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+            </div>
+
+            <!-- Ảnh bìa -->
+            <div class="mb-3">
+                <label class="form-label">Ảnh bìa</label>
+                <input type="file" th:field="*{imageFile}" class="form-control" onchange="previewImage(event,'previewCreate')"/>
+                <img id="previewCreate" style="max-height:150px; margin-top:10px; display:none;"/>
+                <div class="text-danger" th:if="${#fields.hasErrors('imageFile')}" th:errors="*{imageFile}"></div>
+            </div>
+
+            <!-- Tình trạng -->
+            <div class="mb-3">
+                <label class="form-label">Tình trạng</label>
+                <select th:field="*{condition}" class="form-select">
+                    <option value="">-- Chọn tình trạng --</option>
+                    <option th:each="cond : ${T(com.c04.librarymanagement.model.BookCondition).values()}"
+                            th:value="${cond}" th:text="${cond}"></option>
+                </select>
+                <div class="text-danger" th:if="${#fields.hasErrors('condition')}" th:errors="*{condition}"></div>
+            </div>
+
+            <!-- Thể loại -->
+            <div class="mb-3">
+                <label class="form-label">Thể loại</label>
+                <select th:field="*{categoryId}" class="form-select">
+                    <option value="">-- Chọn thể loại --</option>
+                    <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
+                </select>
+                <div class="text-danger" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
+            </div>
+
+            <!-- Nhà xuất bản -->
+            <div class="mb-3">
+                <label class="form-label">Nhà xuất bản</label>
+                <select th:field="*{publisherId}" class="form-select">
+                    <option value="">-- Chọn NXB --</option>
+                    <option th:each="p : ${publishers}" th:value="${p.id}" th:text="${p.name}"></option>
+                </select>
+                <div class="text-danger" th:if="${#fields.hasErrors('publisherId')}" th:errors="*{publisherId}"></div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a th:href="@{/admin/books}" class="btn btn-secondary">⬅ Hủy</a>
+                <button type="submit" class="btn btn-primary">💾 Lưu</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    function previewImage(event, previewId){
+        const input = event.target;
+        const output = document.getElementById(previewId);
+        if(input.files && input.files[0]){
+            const reader = new FileReader();
+            reader.onload = function(){
+                output.src = reader.result;
+                output.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            output.src = '';
+            output.style.display = 'none';
+        }
+    }
+</script>
+</body>
+</html>
