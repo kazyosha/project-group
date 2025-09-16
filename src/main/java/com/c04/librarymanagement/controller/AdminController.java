@@ -1,7 +1,9 @@
 package com.c04.librarymanagement.controller;
 
-import com.c04.librarymanagement.model.User;
-import com.c04.librarymanagement.repository.IUserService;
+import com.c04.librarymanagement.dto.AdminDTO;
+import com.c04.librarymanagement.repository.IUserRepository;
+import com.c04.librarymanagement.service.Interface.IAdminservice;
+import com.c04.librarymanagement.service.Interface.IUserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,27 +14,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+    private final IAdminservice adminService;
     private final IUserService userService;
+    private final IUserRepository userRepository;
 
-    public AdminController(IUserService userService) {
+    public AdminController(IAdminservice adminService, IUserService userService, IUserRepository userRepository) {
+        this.adminService = adminService;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping
     public String home() {
-        return "/admin/home-admin";
+        return "admin/home-admin";
     }
 
-    @GetMapping("/create/user")
-    public String showCreateForm(Model model) {
-        model.addAttribute("user", new User());
-        return "/admin/create-user";
+    @GetMapping("list")
+    public String listUsers(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "/admin/list-user";
     }
-
-    @PostMapping("/create/user")
-    public String createUser(@ModelAttribute("user") User user) {
-        userService.save(user);
-        return "redirect:/admin";
+    @GetMapping("/edit")
+    public String showEditAdminForm(Model model) {
+        AdminDTO admin = adminService.getAdminUser(); // hoặc lấy admin hiện tại
+        model.addAttribute("admin", admin); // 🔹 phải trùng với ${admin}
+        return "admin/edit-admin"; // tên file html
+    }
+    @PostMapping("/profile/update")
+    public String updateAdmin(@ModelAttribute("admin") AdminDTO adminDTO) {
+        adminService.updateAdmin(adminDTO); // service xử lý update admin
+        return "redirect:/admin"; // quay về dashboard
     }
 
 }

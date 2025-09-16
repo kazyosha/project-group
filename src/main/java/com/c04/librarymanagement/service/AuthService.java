@@ -21,4 +21,16 @@ public class AuthService {
         return authRepository.findByEmail(email)
                 .filter(u -> passwordEncoder.matches(rawPassword, u.getPassword()));
     }
+    public String getRedirectUrlByRole(User user) {
+        switch (user.getRole().getName()) {
+            case ADMIN:
+                return "/admin/home";
+            case LIBRARIAN:
+                return "/librarian/home";
+            case USER:
+                return "/user/home";
+            default:
+                return "/"; // fallback nếu không khớp
+        }
+    }
 }

@@ -22,7 +22,9 @@ public class User extends BaseEntity {
     @NotBlank
     private String name;
 
-    private LocalDate birthDate;
+    private boolean deleted = false;
+
+    private LocalDate birthday;
 
     @Email
     @Column(nullable = false, unique = true)
@@ -30,7 +32,7 @@ public class User extends BaseEntity {
 
     private String phone;
 
-    private String avatar;
+    private String imageUrl;
 
     @NotBlank
     private String password;
