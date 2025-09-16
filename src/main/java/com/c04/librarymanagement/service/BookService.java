@@ -4,6 +4,7 @@ import com.c04.librarymanagement.dto.BookDTO;
 import com.c04.librarymanagement.dto.CreateBookDTO;
 import com.c04.librarymanagement.dto.EditBookDTO;
 import com.c04.librarymanagement.dto.response.ListBookResponse;
+import com.c04.librarymanagement.dto.BorrowBookDTO;
 import com.c04.librarymanagement.model.Book;
 import com.c04.librarymanagement.model.Category;
 import com.c04.librarymanagement.model.Publisher;
@@ -147,6 +148,14 @@ public class BookService {
                 .orElseThrow(() -> new RuntimeException("Book not found"));
     }
 
+    private BorrowBookDTO toDTO(Book book) {
+        return BorrowBookDTO.builder()
+                .id(book.getId())
+                .title(book.getTitle())
+                .condition(book.getCondition() != null ? book.getCondition().name() : null)
+                .build();
+    }
+
     public EditBookDTO getEditBookDTO(Long id) {
         Book book = getBookById(id);
         return toEditBookDTO(book);
@@ -161,6 +170,14 @@ public class BookService {
                 .collect(Collectors.toList());
 
         return new ListBookResponse(dtos, bookPage.getNumber() + 1, bookPage.getTotalPages());
+    }
+
+
+    public List<BorrowBookDTO> getAllBooks() {
+        return bookRepository.findByDeletedFalse()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     public ListBookResponse getBooksByCategoryAndPublisher(Long categoryId, Long publisherId, int page, int size) {

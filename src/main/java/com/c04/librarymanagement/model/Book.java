@@ -24,20 +24,24 @@ public class Book {
     private String title;
 
     private String description;
+
     private String image;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "book_condition", nullable = false)
+    @Column(name = "book_condition",nullable = false, length = 50)
     private BookCondition condition;
 
+    // Quan hệ n-1 với Category
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    // Quan hệ n-1 với Publisher
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "publisher_id", nullable = false)
     private Publisher publisher;
 
+    // Quan hệ 1-n với BorrowDetail
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BorrowDetail> borrowDetails;
 
@@ -46,5 +50,6 @@ public class Book {
 
     @Column(updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
     private LocalDateTime updatedAt = LocalDateTime.now();
 }
