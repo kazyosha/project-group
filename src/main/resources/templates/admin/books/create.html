@@ -1,123 +1,95 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      lang="vi"
+<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" th:inline="text"
       layout:decorate="~{layout}">
-
 <head>
     <meta charset="UTF-8">
     <title>Thêm Sách Mới</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: #f8f9fa;
-        }
-        .card {
-            border-radius: 1rem;
-        }
-        .card-header {
-            background: linear-gradient(45deg, #007bff, #00bfff);
-        }
-        .form-control, .form-select {
-            border-radius: 0.6rem;
-            box-shadow: none;
-            transition: 0.2s;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: #00bfff;
-            box-shadow: 0 0 0 0.2rem rgba(0,191,255,.25);
-        }
-        .btn-primary {
-            border-radius: 0.6rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: 0.3s;
-        }
-        .btn-primary:hover {
-            background-color: #0069d9;
-            transform: translateY(-2px);
-        }
-        .btn-outline-secondary {
-            border-radius: 0.6rem;
-        }
-    </style>
 </head>
-
 <body>
 <section layout:fragment="content">
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-7 col-md-9">
-                <div class="card shadow border-0">
-                    <div class="card-header text-white text-center py-4">
-                        <h4 class="mb-0">📚 Thêm Sách Mới</h4>
-                    </div>
-                    <div class="card-body p-4">
-                        <form th:action="@{/admin/books/create}" th:object="${book}" method="post" enctype="multipart/form-data">
+    <div class="content">
+        <h2>📚 Thêm Sách Mới</h2>
 
-                            <!-- Title -->
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Tên sách</label>
-                                <input type="text" th:field="*{title}" class="form-control" placeholder="Nhập tên sách"/>
-                                <div class="form-text text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
-                            </div>
+        <form th:action="@{/admin/books/create}" th:object="${book}" method="post" enctype="multipart/form-data">
 
-                            <!-- Description -->
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Mô tả</label>
-                                <textarea th:field="*{description}" class="form-control" rows="3" placeholder="Nhập mô tả"></textarea>
-                                <div class="form-text text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
-                            </div>
-
-                            <!-- Image -->
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Ảnh bìa</label>
-                                <input type="file" th:field="*{image}" class="form-control"/>
-                                <div class="form-text text-danger" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></div>
-                            </div>
-
-                            <!-- Condition -->
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Tình trạng</label>
-                                <select th:field="*{condition}" class="form-select">
-                                    <option value="">-- Chọn tình trạng --</option>
-                                    <option th:value="NEW">Mới</option>
-                                    <option th:value="USED">Đã sử dụng</option>
-                                    <option th:value="DAMAGED">Hỏng</option>
-                                </select>
-                                <div class="form-text text-danger" th:if="${#fields.hasErrors('condition')}" th:errors="*{condition}"></div>
-                            </div>
-
-                            <!-- Category -->
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Thể loại</label>
-                                <select th:field="*{categoryId}" class="form-select">
-                                    <option value="">-- Chọn thể loại --</option>
-                                    <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
-                                </select>
-                                <div class="form-text text-danger" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
-                            </div>
-
-                            <!-- Publisher -->
-                            <div class="mb-4">
-                                <label class="form-label fw-semibold">Nhà xuất bản</label>
-                                <select th:field="*{publisherId}" class="form-select">
-                                    <option value="">-- Chọn NXB --</option>
-                                    <option th:each="p : ${publishers}" th:value="${p.id}" th:text="${p.name}"></option>
-                                </select>
-                                <div class="form-text text-danger" th:if="${#fields.hasErrors('publisherId')}" th:errors="*{publisherId}"></div>
-                            </div>
-
-                            <!-- Buttons -->
-                            <div class="d-flex justify-content-between">
-                                <a th:href="@{/books}" class="btn btn-outline-secondary px-4">⬅ Hủy</a>
-                                <button type="submit" class="btn btn-primary px-4">💾 Lưu</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+            <!-- Tên sách -->
+            <div class="mb-3">
+                <label class="form-label">Tên sách</label>
+                <input type="text" th:field="*{title}" class="form-control"/>
+                <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
             </div>
-        </div>
+
+            <!-- Mô tả -->
+            <div class="mb-3">
+                <label class="form-label">Mô tả</label>
+                <textarea th:field="*{description}" class="form-control" rows="3"></textarea>
+                <div class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+            </div>
+
+            <!-- Ảnh bìa -->
+            <div class="mb-3">
+                <label class="form-label">Ảnh bìa</label>
+                <input type="file" th:field="*{imageFile}" class="form-control" onchange="previewImage(event,'previewCreate')"/>
+                <img id="previewCreate" style="max-height:150px; margin-top:10px; display:none;"/>
+                <div class="text-danger" th:if="${#fields.hasErrors('imageFile')}" th:errors="*{imageFile}"></div>
+            </div>
+
+            <!-- Tình trạng -->
+            <div class="mb-3">
+                <label class="form-label">Tình trạng</label>
+                <select th:field="*{condition}" class="form-select">
+                    <option value="">-- Chọn tình trạng --</option>
+                    <option th:each="cond : ${T(com.c04.librarymanagement.model.BookCondition).values()}"
+                            th:value="${cond}" th:text="${cond}"></option>
+                </select>
+                <div class="text-danger" th:if="${#fields.hasErrors('condition')}" th:errors="*{condition}"></div>
+            </div>
+
+            <!-- Thể loại -->
+            <div class="mb-3">
+                <label class="form-label">Thể loại</label>
+                <select th:field="*{categoryId}" class="form-select">
+                    <option value="">-- Chọn thể loại --</option>
+                    <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.name}"></option>
+                </select>
+                <div class="text-danger" th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
+            </div>
+
+            <!-- Nhà xuất bản -->
+            <div class="mb-3">
+                <label class="form-label">Nhà xuất bản</label>
+                <select th:field="*{publisherId}" class="form-select">
+                    <option value="">-- Chọn NXB --</option>
+                    <option th:each="p : ${publishers}" th:value="${p.id}" th:text="${p.name}"></option>
+                </select>
+                <div class="text-danger" th:if="${#fields.hasErrors('publisherId')}" th:errors="*{publisherId}"></div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a th:href="@{/admin/books}" class="btn btn-secondary">⬅ Hủy</a>
+                <button type="submit" class="btn btn-primary">💾 Lưu</button>
+            </div>
+        </form>
     </div>
 </section>
+
+<script>
+    function previewImage(event, previewId){
+        const input = event.target;
+        const output = document.getElementById(previewId);
+        if(input.files && input.files[0]){
+            const reader = new FileReader();
+            reader.onload = function(){
+                output.src = reader.result;
+                output.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            output.src = '';
+            output.style.display = 'none';
+        }
+    }
+</script>
 </body>
 </html>

@@ -13,27 +13,26 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @Builder
 public class EditBookDTO {
-    @NotNull(message = "{book.id.notnull}")
+
+    @NotNull(message = "ID sách không được để trống")
     private Long id;
 
-    @NotBlank(message = "{book.title.notblank}")
-    @Size(max = 255, message = "{book.title.size}")
+    @NotBlank(message = "Tên sách không được để trống")
+    @Size(max = 255, message = "Tên sách tối đa 255 ký tự")
     private String title;
 
-    @Size(max = 1000, message = "{book.description.size}")
+    @Size(max = 1000, message = "Mô tả tối đa 1000 ký tự")
     private String description;
 
-    // Cho phép upload ảnh mới, không bắt buộc
     private MultipartFile imageFile;
+    private String currentImage;
 
-    private String currentImage; // để hiển thị ảnh cũ
-
-    @NotNull(message = "{book.condition.notnull}")
+    @NotNull(message = "Tình trạng không được để trống")
     private BookCondition condition;
 
-    @NotNull(message = "{book.category.notnull}")
+    @NotNull(message = "Thể loại không được để trống")
     private Long categoryId;
 
-    @NotNull(message = "{book.publisher.notnull}")
+    @NotNull(message = "Nhà xuất bản không được để trống")
     private Long publisherId;
 }

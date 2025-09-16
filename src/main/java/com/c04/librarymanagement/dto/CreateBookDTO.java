@@ -13,23 +13,23 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 public class CreateBookDTO {
 
-    @NotBlank(message = "Title cannot be empty")
-    @Size(max = 255, message = "Title must be at most 255 characters")
+    @NotBlank(message = "Tên sách không được để trống")
+    @Size(max = 255, message = "Tên sách tối đa 255 ký tự")
     private String title;
 
-    @NotBlank(message = "Description cannot be empty")
-    @Size(max = 1000, message = "Description must be at most 1000 characters")
+    @NotBlank(message = "Mô tả không được để trống")
+    @Size(max = 1000, message = "Mô tả tối đa 1000 ký tự")
     private String description;
 
-    @NotNull(message = "Image cannot be null")
-    private MultipartFile image;
+    @NotNull(message = "Ảnh bìa không được để trống")
+    private MultipartFile imageFile;
 
-    @NotNull(message = "Condition cannot be null")
-    private BookCondition condition; // shared enum with Entity
+    @NotNull(message = "Tình trạng không được để trống")
+    private BookCondition condition;
 
-    @NotNull(message = "Category cannot be null")
+    @NotNull(message = "Thể loại không được để trống")
     private Long categoryId;
 
-    @NotNull(message = "Publisher cannot be null")
+    @NotNull(message = "Nhà xuất bản không được để trống")
     private Long publisherId;
 }

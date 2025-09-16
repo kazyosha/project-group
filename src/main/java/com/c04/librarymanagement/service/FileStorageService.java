@@ -4,16 +4,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.UUID;
 
 @Service
 public class FileStorageService {
 
-    private final Path rootLocation = Paths.get("uploads");
+    private final Path rootLocation = Paths.get("uploads/books");
 
     public FileStorageService() {
         try {
@@ -24,23 +21,14 @@ public class FileStorageService {
     }
 
     public String saveFile(MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new RuntimeException("Failed to store empty file.");
-        }
-
+        if (file.isEmpty()) throw new RuntimeException("File trống!");
         try {
-            // Đặt tên file duy nhất
             String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            Path destinationFile = this.rootLocation.resolve(Paths.get(filename))
-                    .normalize().toAbsolutePath();
-
-            // Copy file
+            Path destinationFile = rootLocation.resolve(filename).normalize().toAbsolutePath();
             Files.copy(file.getInputStream(), destinationFile, StandardCopyOption.REPLACE_EXISTING);
-
-            // Trả về đường dẫn (có thể là URL hoặc relative path)
-            return "/uploads/" + filename;
+            return "/uploads/books/" + filename; // đường dẫn truy cập web
         } catch (IOException e) {
-            throw new RuntimeException("Failed to store file.", e);
+            throw new RuntimeException("Lỗi khi lưu file.", e);
         }
     }
 }

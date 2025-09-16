@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" th:inline="text"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Sách</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="container mt-5">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">📚 Danh sách Sách</h4>
+                <a th:href="@{/admin/books/create}" class="btn btn-light btn-sm">
+                    ➕ Thêm Sách
+                </a>
+            </div>
+            <div class="card-body">
+
+                <!-- Bộ lọc -->
+<!--                <form method="get" th:action="@{/admin/books}" class="mb-4">-->
+<!--                    <div class="input-group">-->
+<!--                        <select name="categoryId" class="form-select">-->
+<!--                            <option value="" th:text="'Tất cả thể loại'"-->
+<!--                                    th:selected="${selectedCategoryId == null}"></option>-->
+<!--                            <option th:each="cat : ${categories}"-->
+<!--                                    th:value="${cat.id}"-->
+<!--                                    th:text="${cat.name}"-->
+<!--                                    th:selected="${cat.id == selectedCategoryId}"></option>-->
+<!--                        </select>-->
+<!--                        <button class="btn btn-secondary" type="submit">Lọc</button>-->
+<!--                    </div>-->
+<!--                </form>-->
+                <!-- Bộ lọc -->
+                <form method="get" th:action="@{/admin/books}" class="mb-4">
+                    <div class="row g-2">
+                        <!-- Lọc theo thể loại -->
+                        <div class="col-md-5">
+                            <select name="categoryId" class="form-select">
+                                <option value="" th:text="'Tất cả thể loại'"
+                                        th:selected="${selectedCategoryId == null}"></option>
+                                <option th:each="cat : ${categories}"
+                                        th:value="${cat.id}"
+                                        th:text="${cat.name}"
+                                        th:selected="${cat.id == selectedCategoryId}"></option>
+                            </select>
+                        </div>
+
+                        <!-- Lọc theo nhà xuất bản -->
+                        <div class="col-md-5">
+                            <select name="publisherId" class="form-select">
+                                <option value="" th:text="'Tất cả NXB'"
+                                        th:selected="${selectedPublisherId == null}"></option>
+                                <option th:each="pub : ${publishers}"
+                                        th:value="${pub.id}"
+                                        th:text="${pub.name}"
+                                        th:selected="${pub.id == selectedPublisherId}"></option>
+                            </select>
+                        </div>
+
+                        <!-- Nút lọc -->
+                        <div class="col-md-2 d-grid">
+                            <button class="btn btn-secondary" type="submit">Lọc</button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Bảng -->
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-dark text-center">
+                        <tr>
+                            <th>ID</th>
+                            <th>Tiêu đề</th>
+                            <th>Mô tả</th>
+                            <th>Tình trạng</th>
+                            <th>Thể loại</th>
+                            <th>NXB</th>
+                            <th>Ảnh</th>
+                            <th>Hành động</th>
+                        </tr>
+                        </thead>
+                        <tbody class="text-center">
+                        <tr th:each="book : ${books}">
+                            <td th:text="${book.id}"></td>
+                            <td th:text="${book.title}"></td>
+                            <td th:text="${book.description}"></td>
+                            <td>
+                                <span th:if="${book.condition == T(com.c04.librarymanagement.model.BookCondition).NEW}"
+                                      class="badge bg-success px-3 py-2">Mới</span>
+                                <span th:if="${book.condition == T(com.c04.librarymanagement.model.BookCondition).OLD}"
+                                      class="badge bg-secondary px-3 py-2">Cũ</span>
+                            </td>
+                            <td th:text="${book.categoryName}"></td>
+                            <td th:text="${book.publisherName}"></td>
+                            <td>
+                                <img th:if="${book.image}" th:src="${book.image}" class="img-thumbnail rounded shadow-sm" style="max-height: 60px;" />
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a th:href="@{'/admin/books/edit/' + ${book.id}}" class="btn btn-warning btn-sm">✏️</a>
+                                    <form th:action="@{'/admin/books/delete/' + ${book.id}}" method="post"
+                                          onsubmit="return confirm('Bạn có chắc chắn muốn xoá sách này không?');">
+                                        <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Phân trang -->
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/admin/books(page=${currentPage - 1}, categoryId=${selectedCategoryId})}">
+                                ⬅ Trang trước
+                            </a>
+                        </li>
+
+                        <li th:each="i : ${#numbers.sequence(1, totalPages)}"
+                            class="page-item"
+                            th:classappend="${i == currentPage} ? ' active'">
+                            <a class="page-link"
+                               th:href="@{/admin/books(page=${i}, categoryId=${selectedCategoryId})}"
+                               th:text="${i}"></a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                            <a class="page-link"
+                               th:href="@{/admin/books(page=${currentPage + 1}, categoryId=${selectedCategoryId})}">
+                                Trang sau ➡
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>
