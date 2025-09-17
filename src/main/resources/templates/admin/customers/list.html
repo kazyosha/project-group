@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" th:inline="text"
+      layout:decorate="~{admin/layout-admin}">
 <head>
     <title>Danh sách khách hàng</title>
     <link rel="stylesheet"
@@ -8,7 +10,7 @@
 
 </head>
 <body class="container mt-5">
-
+<section layout:fragment="content">
 <div class="card shadow p-4">
     <h3 class="mb-3">📋 Danh sách khách hàng</h3>
 
@@ -72,7 +74,6 @@
     </nav>
 
 </div>
-
-<script src="/js/my.js"></script>
+</section>
 </body>
 </html>

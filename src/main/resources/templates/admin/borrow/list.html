@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" th:inline="text"
+      layout:decorate="~{admin/layout-admin}">
 <head>
     <meta charset="UTF-8">
     <title>Danh sách phiếu mượn</title>
@@ -7,52 +9,50 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body class="container mt-5">
+<section layout:fragment="content">
+    <h3>📚 Danh sách phiếu mượn</h3>
 
-<h3>📚 Danh sách phiếu mượn</h3>
+    <div class="row mb-3">
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-3">
+                <select id="statusFilter" class="form-select">
+                    <option value="">-- Tất cả trạng thái --</option>
+                    <option value="BORROWING">Đang mượn</option>
+                    <option value="OVERDUE">Quá hạn</option>
+                    <option value="RETURNED">Đã trả</option>
+                </select>
+            </div>
 
-<div class="row mb-3">
-    <div class="row mb-3 align-items-center">
-        <div class="col-md-3">
-            <select id="statusFilter" class="form-select">
-                <option value="">-- Tất cả trạng thái --</option>
-                <option value="BORROWING">Đang mượn</option>
-                <option value="OVERDUE">Quá hạn</option>
-                <option value="RETURNED">Đã trả</option>
-            </select>
+            <div class="col-md-5">
+                <input type="text" id="searchBox" class="form-control" placeholder="Tìm theo mã hoặc tên...">
+            </div>
+
+            <div class="col-md-4 d-flex justify-content-end">
+                <a th:href="@{/admin/borrows/create}" class="btn btn-primary">
+                    ➕ Thêm Phiếu mới
+                </a>
+            </div>
         </div>
 
-        <div class="col-md-5">
-            <input type="text" id="searchBox" class="form-control" placeholder="Tìm theo mã hoặc tên...">
-        </div>
+        <table class="table table-bordered mt-3">
+            <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Sinh viên</th>
+                <th>Ngày mượn</th>
+                <th>Trạng thái</th>
+                <th>Sách mượn</th>
+                <th>Hành động</th>
+            </tr>
+            </thead>
+            <tbody id="borrowBody">
 
-        <div class="col-md-4 d-flex justify-content-end">
-            <a th:href="@{/admin/borrows/create}" class="btn btn-primary">
-                ➕ Thêm Phiếu mới
-            </a>
-        </div>
-    </div>
-
-<table class="table table-bordered mt-3">
-    <thead class="table-dark">
-    <tr>
-        <th>ID</th>
-        <th>Sinh viên</th>
-        <th>Ngày mượn</th>
-        <th>Trạng thái</th>
-        <th>Sách mượn</th>
-        <th>Hành động</th>
-    </tr>
-    </thead>
-    <tbody id="borrowBody">
-
-    </tbody>
-</table>
-
-<nav>
-    <ul class="pagination justify-content-center" id="pagination">
-    </ul>
-</nav>
-
-<script src="/js/my.js"></script>
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination justify-content-center" id="pagination">
+            </ul>
+        </nav>
+</section>
 </body>
 </html>
