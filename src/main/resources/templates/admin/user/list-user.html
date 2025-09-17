@@ -69,7 +69,8 @@
                        th:href="@{/admin/users/{id}(id=${user.id})}">Xem</a>
 
                     <a class="btn btn-sm btn-warning me-1"
-                       th:href="@{/admin/users/edit/{id}(id=${user.id})}">Sửa</a>
+                       th:href="@{/admin/users/edit/{id}(id=${user.id})}">Sửa
+                    </a>
 
                     <form th:action="@{/admin/users/{id}(id=${user.id})}" method="post" class="d-inline"
                           onsubmit="return confirm('Bạn có chắc muốn xóa người dùng này?');">

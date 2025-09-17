@@ -18,48 +18,69 @@
                     <!-- Tên -->
                     <div class="mb-3">
                         <label for="name" class="form-label fw-bold">👤 Tên đầy đủ</label>
-                        <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nhập tên đầy đủ" required>
+                        <input type="text" th:field="*{name}"
+                               th:classappend="${#fields.hasErrors('name')}? 'is-invalid' : ''"
+                               class="form-control" id="name" placeholder="Nhập tên đầy đủ" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                     </div>
 
                     <!-- Ảnh -->
                     <div class="mb-3">
                         <label for="imageUrl" class="form-label fw-bold">🖼 Ảnh đại diện</label>
-                        <input type="file" th:field="*{imageUrlFile}" class="form-control" id="imageUrl">
+                        <input type="file" th:field="*{imageUrlFile}"
+                               th:classappend="${#fields.hasErrors('imageUrlFile')}? 'is-invalid' : ''"
+                               class="form-control" id="imageUrl">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('imageUrlFile')}" th:errors="*{imageUrlFile}"></div>
                     </div>
 
                     <!-- Ngày sinh -->
                     <div class="mb-3">
                         <label for="birthday" class="form-label fw-bold">🎂 Ngày sinh</label>
-                        <input type="date" th:field="*{birthday}" class="form-control" id="birthday" required>
+                        <input type="date" th:field="*{birthday}"
+                               th:classappend="${#fields.hasErrors('birthday')}? 'is-invalid' : ''"
+                               class="form-control" id="birthday" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}"></div>
                     </div>
 
                     <!-- Email -->
                     <div class="mb-3">
                         <label for="email" class="form-label fw-bold">📧 Email</label>
-                        <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Nhập email" required>
+                        <input type="email" th:field="*{email}"
+                               th:classappend="${#fields.hasErrors('email')}? 'is-invalid' : ''"
+                               class="form-control" id="email" placeholder="Nhập email" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                     </div>
 
                     <!-- Số điện thoại -->
                     <div class="mb-3">
                         <label for="phone" class="form-label fw-bold">📱 Số điện thoại</label>
-                        <input type="text" th:field="*{phone}" class="form-control" id="phone" placeholder="Nhập số điện thoại" required>
+                        <input type="text" th:field="*{phone}"
+                               th:classappend="${#fields.hasErrors('phone')}? 'is-invalid' : ''"
+                               class="form-control" id="phone" placeholder="Nhập số điện thoại" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
                     </div>
 
                     <!-- Mật khẩu -->
                     <div class="mb-3">
                         <label for="password" class="form-label fw-bold">🔑 Mật khẩu</label>
-                        <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Nhập mật khẩu" required>
+                        <input type="password" th:field="*{password}"
+                               th:classappend="${#fields.hasErrors('password')}? 'is-invalid' : ''"
+                               class="form-control" id="password" placeholder="Nhập mật khẩu" required>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
                     </div>
 
                     <!-- Vai trò -->
                     <div class="mb-3">
                         <label for="role" class="form-label fw-bold">⚡ Vai trò</label>
-                        <select th:field="*{role}" class="form-select" id="role" required>
+                        <select th:field="*{role}"
+                                th:classappend="${#fields.hasErrors('role')}? 'is-invalid' : ''"
+                                class="form-select" id="role" required>
                             <option value="" disabled selected>Chọn vai trò</option>
                             <option value="USER">USER</option>
                             <option value="LIBRARIAN">LIBRARIAN</option>
                             <option value="ADMIN">ADMIN</option>
                         </select>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
                     </div>
 
                     <!-- Buttons -->

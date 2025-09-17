@@ -49,6 +49,7 @@
     <!-- Nếu là LIBRARIAN -->
     <div  sec:authorize="hasAnyRole('LIBRARIAN')">
         <a th:href="@{/librarian/account/edit}">👤 Cập nhật thông tin cá nhân</a>
+        <a th:href="@{/librarian/account/change-password}">🔑 Đổi mật khẩu</a>
     </div>
     <hr>
 
@@ -57,7 +58,6 @@
         <h6 class="text-light mt-3">👑 Admin</h6>
         <a th:href="@{/admin/users/create}">➕ Thêm người dùng</a>
         <a th:href="@{/admin/users/list}">✏️ Quản lý người dùng</a>
-        <a th:href="@{/admin/roles/list}">⚡ Quản lý Role</a>
         <a th:href="@{/admin/users/recycle}">🗑️ Người dùng đã xóa</a>
         <hr>
     </div>
