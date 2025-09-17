@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,13 @@ public class CustomerService {
                 .birthDate(dto.getBirthDate())
                 .deleted(false)
                 .build();
+    }
+
+    public List<CustomerDTO> getAllCustomers() {
+        return customerRepository.findAll().stream()
+                .filter(c -> !c.getDeleted())  // chỉ lấy khách hàng còn hoạt động
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     // Thêm khách hàng
@@ -114,5 +122,35 @@ public class CustomerService {
     public Page<CustomerDTO> getDeletedCustomersPage(Pageable pageable) {
         return customerRepository.findByDeletedTrue(pageable)
                 .map(this::toDTO);
+    }
+
+    public List<CustomerDTO> searchByNameOrCode(String keyword) {
+        return customerRepository.findAll().stream()
+                .filter(c -> !c.getDeleted())
+                .filter(c -> c.getName().toLowerCase().contains(keyword.toLowerCase())
+                        || c.getCode().toLowerCase().contains(keyword.toLowerCase()))
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Page<CustomerDTO> searchCustomers(String keyword, Pageable pageable) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getCustomersPage(pageable);
+        }
+        return customerRepository
+                .searchByNameOrCode(
+                        keyword, pageable)
+                .map(this::toDTO);
+    }
+
+    public List<CustomerDTO> searchActiveCustomersForBorrow(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return List.of();
+        }
+
+        List<Customer> customers = customerRepository
+                .findTop10ByDeletedFalseAndNameContainingIgnoreCaseOrDeletedFalseAndCodeContainingIgnoreCase(keyword, keyword);
+
+        return customers.stream().map(this::toDTO).collect(Collectors.toList());
     }
 }

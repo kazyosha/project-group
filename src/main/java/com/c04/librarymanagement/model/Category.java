@@ -1,9 +1,8 @@
 package com.c04.librarymanagement.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -14,14 +13,35 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    // Quan hệ 1-n với Book
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Book> books;
+
+    @Column(nullable = false)
+    private Boolean deleted = false;
+
+    @Column(updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @PrePersist
+    public void prePersist() {
+        if (deleted == null) deleted = false;
+        if (createdAt == null) createdAt = LocalDateTime.now();
+        if (updatedAt == null) updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }
