@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout-admin}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chỉnh sửa người dùng</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Chỉnh sửa người dùng</h2>
+    <a th:href="@{/admin/users/list}" class="btn btn-outline-primary">Quay lại danh sách</a>
+  </div>
+
+  <form th:action="@{/admin/users/update/{id}(id=${user.id})}" th:object="${user}" method="post" enctype="multipart/form-data">
+    <!-- Hidden ID -->
+    <input type="hidden" th:field="*{id}"/>
+
+    <!-- Họ & Tên -->
+    <div class="mb-3">
+      <label for="name" class="form-label">Họ & Tên</label>
+      <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nhập họ và tên" required>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Nhập email" required>
+    </div>
+
+    <!-- Password -->
+    <div class="mb-3">
+      <label for="password" class="form-label">Mật khẩu mới</label>
+      <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Để trống nếu không đổi">
+      <small class="form-text text-muted">Nhập nếu muốn đổi mật khẩu.</small>
+    </div>
+
+    <!-- Role -->
+    <div class="mb-3">
+      <label for="role" class="form-label">Vai trò</label>
+      <select th:field="*{role}" class="form-select" id="role" required>
+        <option th:value="ADMIN" th:selected="${user.role == 'ADMIN'}">Admin</option>
+        <option th:value="LIBRARIAN" th:selected="${user.role == 'LIBRARIAN'}">Librarian</option>
+        <option th:value="USER" th:selected="${user.role == 'USER'}">User</option>
+      </select>
+    </div>
+
+    <!-- Avatar -->
+    <div class="mb-3">
+      <label for="imageUrlFile" class="form-label">Ảnh đại diện</label>
+      <input type="file" th:field="*{imageUrlFile}" class="form-control" id="imageUrlFile">
+      <div th:if="${user.imageUrl != null}">
+        <p>Ảnh hiện tại:</p>
+        <img th:src="${user.imageUrl}" alt="Avatar" class="img-thumbnail" style="max-width: 150px;">
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="submit" class="btn btn-success">Cập nhật</button>
+      <a th:href="@{/admin/users/list}" class="btn btn-secondary">Hủy</a>
+    </div>
+  </form>
+</div>
+</body>
+</html>

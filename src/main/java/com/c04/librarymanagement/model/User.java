@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder // Giữ Builder nếu muốn tạo object dễ dàng
+@Builder
 public class User {
 
     @Id
@@ -24,7 +24,7 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    private LocalDate birthDate;
+    private LocalDate birthday;
 
     @Email
     @Column(nullable = false, unique = true)
@@ -32,7 +32,7 @@ public class User {
 
     private String phone;
 
-    private String avatar;
+    private String imageUrl;
 
     @NotBlank
     @Column(nullable = false)
