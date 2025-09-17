@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org" th:inline="text"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{admin/layout-admin}">
 <head>
     <meta charset="UTF-8">
@@ -43,7 +44,7 @@
                 <tr th:each="category, stat : ${categoryPage}">
                     <td th:text="${categoryPage.number * categoryPage.size + stat.index + 1}"></td>
                     <td th:text="${category.name}"></td>
-                    <td class="text-center">
+                    <td class="text-center" sec:authorize="hasRole('ADMIN')">
                         <a th:href="@{'/admin/categories/edit/' + ${category.id}}"
                            class="btn btn-warning btn-sm">Cập nhật</a>
                         <form th:action="@{'/admin/categories/delete/' + ${category.id}}"

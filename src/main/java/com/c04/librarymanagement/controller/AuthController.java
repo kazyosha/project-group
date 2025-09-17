@@ -23,7 +23,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String showFormlogin() {
-        return "login"; // login.html
+        return "auth/login";
     }
 
     @PostMapping("/login")
@@ -45,7 +45,7 @@ public class AuthController {
             };
         } else {
             model.addAttribute("error", "Sai email hoặc mật khẩu");
-            return "login"; // quay lại login.html
+            return "auth/login"; // quay lại login.html
         }
     }
 

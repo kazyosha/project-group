@@ -24,22 +24,22 @@ public class UserController {
     public String listUsers(Model model) {
         List<UserDTO> users = userService.getAllUsers();
         model.addAttribute("users", users);
-        return "/admin/list-user"; // -> list-user.html
+        return "/admin/user/list-user"; // -> list-user.html
     }
 
-    // 📌 Xem chi tiết
-    @GetMapping("/{id}")
-    public String viewUser(@PathVariable Long id, Model model) {
-        UserDTO user = userService.getUserById(id);
-        model.addAttribute("user", user);
-        return "view-user"; // bạn tạo view-user.html nếu cần
-    }
+//    // 📌 Xem chi tiết
+//    @GetMapping("/{id}")
+//    public String viewUser(@PathVariable Long id, Model model) {
+//        UserDTO user = userService.getUserById(id);
+//        model.addAttribute("user", user);
+//        return "admin/user/view-user";
+//    }
 
     // 📌 Form tạo mới
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("user", new UserDTO());
-        return "/admin/create-user"; // -> create-user.html
+        return "/admin/user/create-user";
     }
 
     // 📌 Lưu user
@@ -54,7 +54,7 @@ public class UserController {
     public String showEditForm(@PathVariable Long id, Model model) {
         UserDTO user = userService.getUserById(id);
         model.addAttribute("user", user);
-        return "/admin/edit-user"; // -> edit-user.html
+        return "/admin/user/edit-user";
     }
     // 📌 Cập nhật user
     @PostMapping("/update/{id}")
@@ -81,7 +81,7 @@ public class UserController {
     public String recycleBin(Model model) {
         List<UserDTO> users = userService.getAllDeletedUsers();
         model.addAttribute("users", users);
-        return "/admin/recycle";
+        return "/admin/user/recycle";
     }
 
     @DeleteMapping("/permanent-delete/{id}")

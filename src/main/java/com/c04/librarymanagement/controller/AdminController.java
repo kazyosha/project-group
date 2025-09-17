@@ -32,18 +32,18 @@ public class AdminController {
     @GetMapping("list")
     public String listUsers(Model model) {
         model.addAttribute("users", userService.getAllUsers());
-        return "/admin/list-user";
+        return "/admin/user/list-user";
     }
     @GetMapping("/edit")
     public String showEditAdminForm(Model model) {
         AdminDTO admin = adminService.getAdminUser(); // hoặc lấy admin hiện tại
         model.addAttribute("admin", admin); // 🔹 phải trùng với ${admin}
-        return "admin/edit-admin"; // tên file html
+        return "admin/user/edit-admin"; // tên file html
     }
     @PostMapping("/profile/update")
     public String updateAdmin(@ModelAttribute("admin") AdminDTO adminDTO) {
         adminService.updateAdmin(adminDTO); // service xử lý update admin
-        return "redirect:/admin"; // quay về dashboard
+        return "redirect:/admin";
     }
 
 }

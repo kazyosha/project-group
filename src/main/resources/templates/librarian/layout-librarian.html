@@ -44,20 +44,57 @@
             <!-- Menu chung -->
             <a href="#">🏠 Trang chủ</a>
             <!--            <a href="#">🔑 Đổi mật khẩu</a>-->
-            <a href="/admin/account/edit">👤 Cập nhật thông tin cá nhân</a>
+            <a href="/librarian/account/edit">👤 Cập nhật thông tin cá nhân</a>
             <hr>
-
-            <!-- Menu ADMIN -->
-            <div id="menu-admin">
-                <h6 class="text-light mt-3">👑 Librarian</h6>
-                <a href="#">📂 Quản lý danh mục sách</a>
-                <a href="#">📕 Quản lý sách</a>
-                <a href="#">🔍 Tìm kiếm sách</a>
-                <a href="#">👥 Quản lý khách mượn</a>
-                <a href="#">📑 Quản lý phiếu mượn</a>
+            <hr>
+            <!-- Quản lý Danh mục -->
+            <div class="dropdown">
+                <a class="dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#categoryMenu"
+                   aria-expanded="false" aria-controls="categoryMenu">
+                    📂 Quản lý danh mục
+                </a>
+                <div class="collapse ps-3" id="categoryMenu">
+                    <a th:href="@{/admin/categories}">📋 Danh sách</a>
+                </div>
             </div>
+
+            <!-- Quản lý Sách -->
+            <div class="dropdown">
+                <a class="dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#booksMenu"
+                   aria-expanded="false" aria-controls="booksMenu">
+                    📕 Quản lý sách
+                </a>
+                <div class="collapse ps-3" id="booksMenu">
+                    <a th:href="@{/admin/books}">📋 Danh sách</a>
+                </div>
+            </div>
+
+            <!-- Quản lý Khách mượn -->
+            <div class="dropdown">
+                <a class="dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#customersMenu"
+                   aria-expanded="false" aria-controls="customersMenu">
+                    👥 Quản lý khách mượn
+                </a>
+                <div class="collapse ps-3" id="customersMenu">
+                    <a th:href="@{/admin/customers}">📋 Danh sách</a>
+                    <a th:href="@{/admin/customers/create}">➕ Thêm</a>
+                </div>
+            </div>
+
+            <!-- Quản lý Phiếu mượn -->
+            <div class="dropdown">
+                <a class="dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#borrowMenu"
+                   aria-expanded="false" aria-controls="borrowMenu">
+                    📑 Quản lý phiếu mượn
+                </a>
+                <div class="collapse ps-3" id="borrowMenu">
+                    <a th:href="@{/admin/borrows}">📋 Danh sách</a>
+                    <a th:href="@{/admin/borrows/create}">➕ Thêm</a>
+                </div>
+            </div>
+
             <hr>
-            <a href="/auth/logout" class="text-danger">🚪 Đăng xuất</a>
+            <a th:href="@{/auth/logout}" class="text-danger">🚪 Đăng xuất</a>
         </nav>
 
         <!-- Nội dung chính -->

@@ -79,6 +79,8 @@
                 <a th:href="@{/admin/books}" class="btn btn-secondary">⬅ Hủy</a>
                 <button type="submit" class="btn btn-primary">💾 Cập nhật</button>
             </div>
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         </form>
     </div>
 </section>

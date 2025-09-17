@@ -2,6 +2,7 @@
 <html lang="vi"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{admin/layout-admin}">
 <head>
     <meta charset="UTF-8">
@@ -58,7 +59,7 @@
                 <td th:text="${user.role != null ? user.role : '---'}">Role</td>
                 <td><span class="badge bg-success">Active</span></td>
                 <td th:text="${user.createdAt != null ? #dates.format(user.createdAt, 'dd/MM/yyyy') : '---'}">---</td>
-                <td>
+                <td sec:authorize="hasRole('ADMIN')">
                     <a class="btn btn-sm btn-info me-1"
                        th:href="@{/admin/users/{id}(id=${user.id})}">Xem</a>
                     <a class="btn btn-sm btn-warning me-1"

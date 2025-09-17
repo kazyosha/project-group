@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org" th:inline="text"
-      layout:decorate="~{admin/layout-admin}">
+      layout:decorate="~{admin/layout-admin}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Danh sách Sách</title>
@@ -99,11 +100,12 @@
                                 <img th:if="${book.image}" th:src="${book.image}" class="img-thumbnail rounded shadow-sm" style="max-height: 60px;" />
                             </td>
                             <td>
-                                <div class="btn-group" role="group">
+                                <div class="btn-group" role="group" sec:authorize="hasRole('ADMIN')">
                                     <a th:href="@{'/admin/books/edit/' + ${book.id}}" class="btn btn-warning btn-sm">✏️</a>
                                     <form th:action="@{'/admin/books/delete/' + ${book.id}}" method="post"
                                           onsubmit="return confirm('Bạn có chắc chắn muốn xoá sách này không?');">
                                         <button type="submit" class="btn btn-danger btn-sm">🗑️</button>
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                                     </form>
                                 </div>
                             </td>
@@ -113,15 +115,17 @@
                 </div>
 
                 <!-- Phân trang -->
-                <nav>
+                <nav th:if="${totalPages > 1}">
                     <ul class="pagination justify-content-center">
+                        <!-- Previous -->
                         <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
                             <a class="page-link"
                                th:href="@{/admin/books(page=${currentPage - 1}, categoryId=${selectedCategoryId})}">
-                                ⬅ Trang trước
+                                «
                             </a>
                         </li>
 
+                        <!-- Page numbers -->
                         <li th:each="i : ${#numbers.sequence(1, totalPages)}"
                             class="page-item"
                             th:classappend="${i == currentPage} ? ' active'">
@@ -130,10 +134,11 @@
                                th:text="${i}"></a>
                         </li>
 
+                        <!-- Next -->
                         <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
                             <a class="page-link"
                                th:href="@{/admin/books(page=${currentPage + 1}, categoryId=${selectedCategoryId})}">
-                                Trang sau ➡
+                                »
                             </a>
                         </li>
                     </ul>

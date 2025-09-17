@@ -12,7 +12,7 @@
 <div layout:fragment="content" class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h2>Chỉnh sửa tài khoản Admin</h2>
-    <a th:href="@{/admin}" class="btn btn-outline-primary">Quay lại Dashboard</a>
+    <a th:href="@{/templates/admin}" class="btn btn-outline-primary">Quay lại Dashboard</a>
   </div>
 
   <form th:action="@{/admin/profile/update}" th:object="${admin}" method="post">
@@ -48,7 +48,7 @@
     </div>
 
     <button type="submit" class="btn btn-success">Cập nhật</button>
-    <a th:href="@{/admin}" class="btn btn-secondary">Hủy</a>
+    <a th:href="@{/templates/admin}" class="btn btn-secondary">Hủy</a>
   </form>
 
 </div>
