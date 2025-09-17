@@ -23,7 +23,7 @@ public class LibrarianController {
 
     @GetMapping
     public String home() {
-        return "librarian/home-librarian";
+        return "/home";
     }
 
     @GetMapping("/account/edit")
@@ -67,6 +67,6 @@ public class LibrarianController {
         librarianService.update(dto, avatar);
 
         // không cần set lại session, SecurityContext tự quản lý authentication
-        return "redirect:/librarian/home";
+        return "redirect:/home";
     }
 }

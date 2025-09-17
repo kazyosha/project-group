@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      layout:decorate="~{admin/layout-admin}">
+      layout:decorate="~{/layout}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +11,7 @@
 </head>
 <body>
 <div layout:fragment="content" class="container mt-4">
+
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Danh sách người dùng</h2>
     </div>
@@ -38,20 +39,22 @@
                 <th scope="col">Vai trò</th>
                 <th scope="col">Trạng thái</th>
                 <th scope="col">Ngày tạo</th>
-                <th scope="col" style="width:180px">Hành động</th>
+                <th scope="col" style="width:200px">Hành động</th>
             </tr>
             </thead>
             <tbody>
+            <!-- Nếu không có user -->
             <tr th:if="${users == null or #lists.isEmpty(users)}">
-                <td colspan="7" class="text-center">Không có người dùng nào.</td>
+                <td colspan="8" class="text-center">Không có người dùng nào.</td>
             </tr>
 
+            <!-- Danh sách user -->
             <tr th:each="user,iterStat : ${users}">
                 <td th:text="${iterStat.index + 1}">1</td>
                 <td th:text="${user.name}">Tên</td>
                 <td>
                     <img th:if="${user.imageUrl != null}"
-                         th:src="@{${user.imageUrl}}"
+                         th:src="${user.imageUrl}"
                          class="rounded-circle"
                          style="width:50px; height:50px; object-fit: cover;" />
                 </td>
@@ -59,11 +62,14 @@
                 <td th:text="${user.role != null ? user.role : '---'}">Role</td>
                 <td><span class="badge bg-success">Active</span></td>
                 <td th:text="${user.createdAt != null ? #dates.format(user.createdAt, 'dd/MM/yyyy') : '---'}">---</td>
+
+                <!-- Chỉ ADMIN mới thấy -->
                 <td sec:authorize="hasRole('ADMIN')">
                     <a class="btn btn-sm btn-info me-1"
                        th:href="@{/admin/users/{id}(id=${user.id})}">Xem</a>
+
                     <a class="btn btn-sm btn-warning me-1"
-                       th:href="@{/admin/users/view/{id}(id=${user.id})}">Sửa</a>
+                       th:href="@{/admin/users/edit/{id}(id=${user.id})}">Sửa</a>
 
                     <form th:action="@{/admin/users/{id}(id=${user.id})}" method="post" class="d-inline"
                           onsubmit="return confirm('Bạn có chắc muốn xóa người dùng này?');">
@@ -73,7 +79,6 @@
                     </form>
                 </td>
             </tr>
-
             </tbody>
         </table>
     </div>
@@ -82,17 +87,20 @@
     <nav th:if="${page != null}">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${page.number == 0} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/users(page=${page.number - 1}, q=${param.q}, role=${param.role})}">«</a>
+                <a class="page-link"
+                   th:href="@{/admin/users(page=${page.number - 1}, q=${param.q}, role=${param.role})}">«</a>
             </li>
 
             <li class="page-item" th:each="i : ${#numbers.sequence(0, page.totalPages - 1)}"
                 th:classappend="${i == page.number} ? 'active'">
-                <a class="page-link" th:href="@{/admin/users(page=${i}, q=${param.q}, role=${param.role})}"
+                <a class="page-link"
+                   th:href="@{/admin/users(page=${i}, q=${param.q}, role=${param.role})}"
                    th:text="${i + 1}">1</a>
             </li>
 
             <li class="page-item" th:classappend="${page.number + 1 == page.totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/users(page=${page.number + 1}, q=${param.q}, role=${param.role})}">»</a>
+                <a class="page-link"
+                   th:href="@{/admin/users(page=${page.number + 1}, q=${param.q}, role=${param.role})}">»</a>
             </li>
         </ul>
     </nav>

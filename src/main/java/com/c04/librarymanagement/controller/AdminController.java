@@ -26,7 +26,7 @@ public class AdminController {
 
     @GetMapping
     public String home() {
-        return "admin/home-admin";
+        return "/home";
     }
 
     @GetMapping("list")
