@@ -10,12 +10,8 @@ import com.c04.librarymanagement.service.Interface.IUserService;
 import com.c04.librarymanagement.util.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,13 +21,18 @@ public class UserService implements IUserService {
     private final IUserRepository userRepository;
     private final IRoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AvatarStorageService avatarStorageService;
 
-    public UserService(IUserRepository userRepository, IRoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserService(IUserRepository userRepository,
+                       IRoleRepository roleRepository,
+                       PasswordEncoder passwordEncoder, AvatarStorageService avatarStorageService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.avatarStorageService = avatarStorageService;
     }
 
+    // ================== MAPPING ==================
     private UserDTO toDTO(User user) {
         return UserDTO.builder()
                 .id(user.getId())
@@ -39,14 +40,13 @@ public class UserService implements IUserService {
                 .imageUrl(user.getImageUrl())
                 .email(user.getEmail())
                 .password(user.getPassword())
-                .role(user.getRole().getName().name()) // lấy ADMIN/USER
+                .role(user.getRole().getName().name())
                 .build();
     }
 
     private User toEntity(UserDTO dto) {
         Role role = roleRepository.findByName(RoleType.valueOf(dto.getRole()))
                 .orElseThrow(() -> new RuntimeException("Role not found: " + dto.getRole()));
-        System.out.println("Role: " + role.getName());
 
         return User.builder()
                 .id(dto.getId())
@@ -55,33 +55,21 @@ public class UserService implements IUserService {
                 .email(dto.getEmail())
                 .password(dto.getPassword())
                 .role(role)
+                .deleted(false)
                 .build();
     }
-    private String saveAvatar(MultipartFile file) throws IOException {
-        if (file == null || file.isEmpty()) return null;
 
-        // 📌 Lưu cố định vào thư mục Downloads/uploads
-        Path uploadPath = Paths.get("C:/Users/admin/Downloads/uploads/avatars");
-        if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
-
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        Path filePath = uploadPath.resolve(fileName);
-
-        file.transferTo(filePath.toFile());
-
-        // 👉 Trả về đường dẫn ảo để hiển thị (sẽ map bằng ResourceHandler)
-        return "/uploads/avatars/" + fileName;
-    }
-
-
+    // ================== SERVICE METHODS ==================
     @Override
     public List<UserDTO> getAllUsers() {
-        return userRepository.findAllByDeletedFalse().stream().map(this::toDTO).collect(Collectors.toList());
+        return userRepository.findAllByDeletedFalse()
+                .stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     @Override
     public UserDTO getUserById(Long id) {
-        return userRepository.findById(id).map(this::toDTO)
+        return userRepository.findById(id)
+                .map(this::toDTO)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
 
@@ -91,12 +79,11 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         if (userDTO.getImageUrlFile() != null && !userDTO.getImageUrlFile().isEmpty()) {
-            String url = saveAvatar(userDTO.getImageUrlFile());
+            String url = avatarStorageService.saveAvatar(userDTO.getImageUrlFile());
             user.setImageUrl(url);
         }
 
-        User savedUser = userRepository.save(user);
-        return toDTO(savedUser);
+        return toDTO(userRepository.save(user));
     }
 
     @Override
@@ -114,7 +101,7 @@ public class UserService implements IUserService {
         }
 
         if (userDTO.getImageUrlFile() != null && !userDTO.getImageUrlFile().isEmpty()) {
-            String url = saveAvatar(userDTO.getImageUrlFile());
+            String url = avatarStorageService.saveAvatar(userDTO.getImageUrlFile());
             existingUser.setImageUrl(url);
         }
 
@@ -129,42 +116,37 @@ public class UserService implements IUserService {
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        user.setDeleted(true);  // chỉ set deleted = true
-        userRepository.save(user); // lưu lại thay đổi
+        user.setDeleted(true);
+        userRepository.save(user);
     }
+
     @Override
     public void restoreUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found: " + id));
-        user.setDeleted(false); // 🔹 khôi phục
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        user.setDeleted(false);
         userRepository.save(user);
     }
 
     @Override
     public List<UserDTO> getAllDeletedUsers() {
         return userRepository.findAllByDeletedTrue()
-                .stream()
-                .map(this::toDTO)  // dùng toDTO sẵn có
-                .toList();
+                .stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     @Override
     public void permanentDeleteUser(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found: " + id));
-        userRepository.delete(user); // xóa thật
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        userRepository.delete(user);
     }
 
     @Override
     public UserDTO save(UserDTO userDTO) throws IOException {
         if (userDTO.getId() == null) {
-            // Nếu chưa có id thì tạo mới
             return createUser(userDTO);
         } else {
-            // Nếu có id thì update
             return updateUser(userDTO.getId(), userDTO);
         }
     }
-
-
 }

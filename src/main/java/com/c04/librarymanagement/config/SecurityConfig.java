@@ -28,19 +28,24 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(
-                                "/resources/**",
-                                "/auth/login",
-                                "/uploads/**",
-                                "/js/**",
-                                "/css/**",
-                                "/images/**"
-                        ).permitAll()
-                        .requestMatchers("/admin/users", "/admin/users/search")
-                        .hasAnyRole("ADMIN","LIBRARIAN")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // Public resources
+                        .requestMatchers("/resources/**", "/auth/login", "/uploads/**", "/js/**", "/css/**", "/images/**").permitAll()
+
+                        // LIBRARIAN có thể xem danh sách trước
+                        .requestMatchers("/admin/books").hasAnyRole("ADMIN", "LIBRARIAN")
+                        .requestMatchers("/admin/categories").hasAnyRole("ADMIN", "LIBRARIAN")
+                        .requestMatchers("/admin/borrows").hasAnyRole("ADMIN", "LIBRARIAN")
+
+                        // ADMIN CRUD đầy đủ
+                        .requestMatchers("/admin/users/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/books/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/categories/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/borrows/**").hasRole("ADMIN")
+
+                        // Librarian pages
                         .requestMatchers("/librarian/**").hasRole("LIBRARIAN")
-                        .requestMatchers("/home/**").hasAnyRole("USER","ADMIN","LIBRARIAN")
+
+                        // Default: authenticated
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

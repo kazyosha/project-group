@@ -1,5 +1,10 @@
 //Search cho create book-loan
 $(document).ready(function() {
+    $(document).ajaxSend(function(e, xhr, options) {
+        let token = $("meta[name='_csrf']").attr("content");
+        let header = $("meta[name='_csrf_header']").attr("content");
+        xhr.setRequestHeader(header, token);
+    });
     let timer;
 
     $('#studentInput').on('input', function() {
@@ -153,13 +158,18 @@ $(document).ready(function() {
         const borrowId = form.data("id");
         const status = $(this).val();
 
+        let token = $("meta[name='_csrf']").attr("content");
+        let header = $("meta[name='_csrf_header']").attr("content");
+
         $.ajax({
             url: `/admin/borrows/${borrowId}/status`,
             type: "POST",
             data: { status: status },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(header, token);
+            },
             success: function(response) {
                 console.log("Cập nhật thành công:", response);
-                // update cột status ngay
                 form.closest("tr").find("td:eq(3)").text(status);
             },
             error: function(xhr) {

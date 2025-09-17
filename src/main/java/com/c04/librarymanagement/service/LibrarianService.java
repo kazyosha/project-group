@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Service
@@ -18,7 +19,9 @@ public class LibrarianService implements ILibrarianService {
 
     private final IUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final String UPLOAD_DIR = "C:/Users/admin/Downloads/uploads/avatars/";
+
+    // 📌 Đường dẫn tương đối trong dự án
+    private static final String UPLOAD_DIR = "uploads/avatars/";
 
     public LibrarianService(IUserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -64,9 +67,11 @@ public class LibrarianService implements ILibrarianService {
         if (avatar != null && !avatar.isEmpty()) {
             try {
                 String fileName = System.currentTimeMillis() + "_" + avatar.getOriginalFilename();
-                File dest = new File(UPLOAD_DIR + fileName);
-                avatar.transferTo(dest);
-                user.setImageUrl("avatars/" + fileName);
+                Path destination = Paths.get(UPLOAD_DIR, fileName);
+                Files.copy(avatar.getInputStream(), destination);
+
+                // 🔹 Lưu đường dẫn web, không lưu full path
+                user.setImageUrl("/uploads/avatars/" + fileName);
             } catch (IOException e) {
                 throw new RuntimeException("Lỗi upload file", e);
             }
@@ -74,6 +79,7 @@ public class LibrarianService implements ILibrarianService {
 
         userRepository.save(user);
     }
+
     public LibrarianDTO findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(u -> LibrarianDTO.builder()

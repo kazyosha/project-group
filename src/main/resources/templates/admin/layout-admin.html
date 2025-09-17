@@ -1,75 +1,146 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org" th:inline="text">
+<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý Thư viện</title>
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
             min-height: 100vh;
-            background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f') no-repeat center center/cover;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://images.unsplash.com/photo-1524995997946-a1c2e315a42f')
+            no-repeat center center/cover;
         }
+
+        /* Sidebar cố định */
         .sidebar {
-            height: 100vh;
-            background: rgba(0,0,0,0.7);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 250px;
+            background: rgba(0, 0, 0, 0.85);
             color: #fff;
             padding: 20px;
+            overflow-y: auto;
         }
+
+        .sidebar h4 {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
         .sidebar a {
             color: #fff;
             text-decoration: none;
             display: block;
             padding: 8px 0;
         }
+
         .sidebar a:hover {
             color: #ffc107;
         }
-        .content {
+
+        /* Content chính */
+        .main-content {
+            margin-left: 250px; /* bằng width sidebar */
             padding: 20px;
-            background: rgba(255,255,255,0.9);
+        }
+
+        .content-wrapper {
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 10px;
-            margin: 20px;
+            padding: 20px;
         }
     </style>
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <nav class="col-md-3 col-lg-2 sidebar">
-            <h4 class="text-warning">📚 Quản lý Thư viện</h4>
-            <hr>
-            <!-- Menu chung -->
-            <a href="#">🏠 Trang chủ</a>
-<!--            <a href="#">🔑 Đổi mật khẩu</a>-->
-            <a href="/admin/edit">👤 Cập nhật thông tin cá nhân</a>
-            <hr>
+<!-- Sidebar -->
+<nav class="sidebar">
+    <h4 class="text-warning">📚 Quản lý Thư viện</h4>
+    <hr>
 
-            <!-- Menu ADMIN -->
-            <div id="menu-admin">
-                <h6 class="text-light mt-3">👑 Admin</h6>
-                <a href="/admin/users/create">➕ Thêm người dùng</a>
-                <a href="/admin/users/list">✏️ Danh sách người dùng</a>
-                <a href="/admin/users/recycle">🗑️ Xóa / Khôi phục người dùng</a>
-                <a href="#">📂 Quản lý danh mục sách</a>
-                <a href="#">📕 Quản lý sách</a>
-                <a href="#">🔍 Tìm kiếm sách</a>
-                <a href="#">👥 Quản lý khách mượn</a>
-                <a href="#">📑 Quản lý phiếu mượn</a>
-            </div>
-            <hr>
-            <a href="/auth/logout" class="text-danger">🚪 Đăng xuất</a>
-        </nav>
+    <!-- Menu chung -->
+    <a th:href="@{/admin}">🏠 Trang chủ</a>
+    <a th:href="@{/auth/change-password}">🔑 Đổi mật khẩu</a>
+    <a th:href="@{/librarian/account/edit}">👤 Cập nhật thông tin cá nhân</a>
+    <hr>
 
-        <!-- Nội dung chính -->
-        <main class="col-md-9 col-lg-10">
-            <div layout:fragment="content"></div>
-        </main>
+    <!-- Menu ADMIN -->
+    <h6 class="text-light mt-3">👑 Admin</h6>
+    <a th:href="@{/admin/users/create}">➕ Thêm người dùng</a>
+    <a th:href="@{/admin/users/list}">✏️ Quản lý người dùng</a>
+    <a th:href="@{/admin/roles/list}">⚡ Quản lý Role</a>
+    <a th:href="@{/admin/users/deleted}">🗑️ Người dùng đã xóa</a>
+
+    <hr>
+    <!-- Quản lý Danh mục -->
+    <div class="dropdown">
+        <a class="dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#categoryMenu"
+           aria-expanded="false" aria-controls="categoryMenu">
+            📂 Quản lý danh mục
+        </a>
+        <div class="collapse ps-3" id="categoryMenu">
+            <a th:href="@{/admin/categories}">📋 Danh sách</a>
+            <a th:href="@{/admin/categories/create}">➕ Thêm</a>
+        </div>
     </div>
-</div>
 
+    <!-- Quản lý Sách -->
+    <div class="dropdown">
+        <a class="dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#booksMenu"
+           aria-expanded="false" aria-controls="booksMenu">
+            📕 Quản lý sách
+        </a>
+        <div class="collapse ps-3" id="booksMenu">
+            <a th:href="@{/admin/books}">📋 Danh sách</a>
+            <a th:href="@{/admin/books/create}">➕ Thêm</a>
+        </div>
+    </div>
+
+    <!-- Quản lý Khách mượn -->
+    <div class="dropdown">
+        <a class="dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#customersMenu"
+           aria-expanded="false" aria-controls="customersMenu">
+            👥 Quản lý khách mượn
+        </a>
+        <div class="collapse ps-3" id="customersMenu">
+            <a th:href="@{/admin/customers}">📋 Danh sách</a>
+            <a th:href="@{/admin/customers/create}">➕ Thêm</a>
+            <a th:href="@{/admin/customers/deleted}">🗑️ Recycle Bin</a>
+        </div>
+    </div>
+
+    <!-- Quản lý Phiếu mượn -->
+    <div class="dropdown">
+        <a class="dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#borrowMenu"
+           aria-expanded="false" aria-controls="borrowMenu">
+            📑 Quản lý phiếu mượn
+        </a>
+        <div class="collapse ps-3" id="borrowMenu">
+            <a th:href="@{/admin/borrows}">📋 Danh sách</a>
+            <a th:href="@{/admin/borrows/create}">➕ Thêm</a>
+        </div>
+    </div>
+
+    <hr>
+    <a th:href="@{/auth/logout}" class="text-danger">🚪 Đăng xuất</a>
+</nav>
+<!-- Nội dung chính -->
+<main class="main-content">
+    <div class="content-wrapper" id="content-area" layout:fragment="content">
+        <!-- Nội dung của từng trang con sẽ render vào đây -->
+    </div>
+</main>
+
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/my.js"></script>
 </body>
 </html>

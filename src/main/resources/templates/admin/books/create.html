@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org" th:inline="text"
-      layout:decorate="~{layout}">
+      layout:decorate="~{admin/layout-admin}">
 <head>
     <meta charset="UTF-8">
     <title>Thêm Sách Mới</title>
@@ -70,6 +70,8 @@
                 <a th:href="@{/admin/books}" class="btn btn-secondary">⬅ Hủy</a>
                 <button type="submit" class="btn btn-primary">💾 Lưu</button>
             </div>
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         </form>
     </div>
 </section>
