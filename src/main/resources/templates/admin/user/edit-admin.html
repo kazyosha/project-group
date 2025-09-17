@@ -1,55 +1,64 @@
 <!DOCTYPE html>
-<html lang="vi"
+<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{admin/layout-admin}">
+      layout:decorate="~{/layout}">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chỉnh sửa tài khoản Admin</title>
 </head>
+
 <body>
-<div layout:fragment="content" class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>Chỉnh sửa tài khoản Admin</h2>
-    <a th:href="@{/templates/admin}" class="btn btn-outline-primary">Quay lại Dashboard</a>
+<div layout:fragment="content" class="container py-5">
+
+  <div class="card shadow-lg p-4 mx-auto" style="max-width: 700px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="text-primary m-0">👤 Chỉnh sửa tài khoản Admin</h3>
+      <a th:href="@{/admin}" class="btn btn-outline-secondary btn-sm">
+        ⬅ Quay lại Dashboard
+      </a>
+    </div>
+
+    <form th:action="@{/admin/profile/update}" th:object="${admin}" method="post">
+
+      <!-- Họ & Tên -->
+      <div class="mb-3">
+        <label for="name" class="form-label fw-bold">Họ & Tên</label>
+        <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nhập họ và tên" required>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label fw-bold">Email</label>
+        <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Nhập email" required>
+      </div>
+
+      <!-- SĐT -->
+      <div class="mb-3">
+        <label for="phone" class="form-label fw-bold">Số điện thoại</label>
+        <input type="text" th:field="*{phone}" class="form-control" id="phone" placeholder="Nhập số điện thoại">
+      </div>
+
+      <!-- Ngày sinh -->
+      <div class="mb-3">
+        <label for="birthday" class="form-label fw-bold">Ngày sinh</label>
+        <input type="date" th:field="*{birthday}" class="form-control" id="birthday">
+      </div>
+
+      <!-- Mật khẩu -->
+      <div class="mb-4">
+        <label for="password" class="form-label fw-bold">Mật khẩu mới</label>
+        <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Để trống nếu không đổi mật khẩu">
+        <div class="form-text">Nếu không muốn đổi mật khẩu, hãy để trống.</div>
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-success me-2">💾 Cập nhật</button>
+        <a th:href="@{/admin}" class="btn btn-secondary">❌ Hủy</a>
+      </div>
+    </form>
   </div>
-
-  <form th:action="@{/admin/profile/update}" th:object="${admin}" method="post">
-    <!-- Họ & Tên -->
-    <div class="mb-3">
-      <label for="name" class="form-label">Họ & Tên</label>
-      <input type="text" th:field="*{name}" class="form-control" id="name" required>
-    </div>
-
-    <!-- Email -->
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <input type="email" th:field="*{email}" class="form-control" id="email" required>
-    </div>
-
-    <!-- SĐT -->
-    <div class="mb-3">
-      <label for="phone" class="form-label">Số điện thoại</label>
-      <input type="text" th:field="*{phone}" class="form-control" id="phone">
-    </div>
-
-    <!-- Ngày sinh -->
-    <div class="mb-3">
-      <label for="birthday" class="form-label">Ngày sinh</label>
-      <input type="date" th:field="*{birthday}" class="form-control" id="birthday">
-    </div>
-
-    <!-- Mật khẩu -->
-    <div class="mb-3">
-      <label for="password" class="form-label">Mật khẩu mới</label>
-      <input type="password" th:field="*{password}" class="form-control" id="password">
-      <small class="form-text text-muted">Để trống nếu không đổi mật khẩu.</small>
-    </div>
-
-    <button type="submit" class="btn btn-success">Cập nhật</button>
-    <a th:href="@{/templates/admin}" class="btn btn-secondary">Hủy</a>
-  </form>
 
 </div>
 </body>

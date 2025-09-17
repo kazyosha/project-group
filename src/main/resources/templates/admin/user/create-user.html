@@ -1,63 +1,75 @@
 <!DOCTYPE html>
-<html lang="vi"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{admin/layout-admin}">
+<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" th:inline="text"
+      layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
     <title>Tạo người dùng mới - Admin</title>
 </head>
 <body>
 <div layout:fragment="content" class="content">
-    <div class="container">
-        <h2 class="mb-4">➕ Tạo người dùng mới</h2>
+    <div class="container d-flex justify-content-center mt-5">
+        <div class="card shadow-lg p-4" style="width: 600px; border-radius: 16px;">
+            <div class="card-body">
+                <h2 class="text-center mb-4">➕ Tạo người dùng mới</h2>
 
-        <!-- Chỉ 1 form duy nhất, nhớ thêm enctype -->
-        <form th:action="@{/admin/users}" th:object="${user}" method="post" enctype="multipart/form-data">
+                <form th:action="@{/admin/users}" th:object="${user}" method="post" enctype="multipart/form-data">
 
-            <div class="mb-3">
-                <label for="name" class="form-label">Tên đầy đủ</label>
-                <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nhập tên đầy đủ" required>
+                    <!-- Tên -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-bold">👤 Tên đầy đủ</label>
+                        <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nhập tên đầy đủ" required>
+                    </div>
+
+                    <!-- Ảnh -->
+                    <div class="mb-3">
+                        <label for="imageUrl" class="form-label fw-bold">🖼 Ảnh đại diện</label>
+                        <input type="file" th:field="*{imageUrlFile}" class="form-control" id="imageUrl">
+                    </div>
+
+                    <!-- Ngày sinh -->
+                    <div class="mb-3">
+                        <label for="birthday" class="form-label fw-bold">🎂 Ngày sinh</label>
+                        <input type="date" th:field="*{birthday}" class="form-control" id="birthday" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-bold">📧 Email</label>
+                        <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Nhập email" required>
+                    </div>
+
+                    <!-- Số điện thoại -->
+                    <div class="mb-3">
+                        <label for="phone" class="form-label fw-bold">📱 Số điện thoại</label>
+                        <input type="text" th:field="*{phone}" class="form-control" id="phone" placeholder="Nhập số điện thoại" required>
+                    </div>
+
+                    <!-- Mật khẩu -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label fw-bold">🔑 Mật khẩu</label>
+                        <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Nhập mật khẩu" required>
+                    </div>
+
+                    <!-- Vai trò -->
+                    <div class="mb-3">
+                        <label for="role" class="form-label fw-bold">⚡ Vai trò</label>
+                        <select th:field="*{role}" class="form-select" id="role" required>
+                            <option value="" disabled selected>Chọn vai trò</option>
+                            <option value="USER">USER</option>
+                            <option value="LIBRARIAN">LIBRARIAN</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <a th:href="@{/admin}" class="btn btn-outline-secondary px-4">Hủy</a>
+                        <button type="submit" class="btn btn-primary px-4">Tạo người dùng</button>
+                    </div>
+                </form>
             </div>
-
-            <div class="mb-3">
-                <label for="imageUrl" class="form-label">Ảnh đại diện</label>
-                <input type="file" th:field="*{imageUrlFile}" class="form-control" id="imageUrl">
-            </div>
-
-            <div class="mb-3">
-                <label for="birthday" class="form-label">Ngày sinh</label>
-                <input type="date" th:field="*{birthday}" class="form-control" id="birthday" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Nhập email" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="phone" class="form-label">Số điện thoại</label>
-                <input type="text" th:field="*{phone}" class="form-control" id="phone" placeholder="Nhập số điện thoại" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="password" class="form-label">Mật khẩu</label>
-                <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Nhập mật khẩu" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="role" class="form-label">Vai trò</label>
-                <select th:field="*{role}" class="form-select" id="role" required>
-                    <option value="" disabled selected>Chọn vai trò</option>
-                    <option value="USER">USER</option>
-                    <option value="LIBRARIAN">LIBRARIAN</option>
-                    <option value="ADMIN">ADMIN</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Tạo người dùng</button>
-            <a th:href="@{/templates/admin}" class="btn btn-secondary">Hủy</a>
-        </form>
+        </div>
     </div>
 </div>
 </body>
