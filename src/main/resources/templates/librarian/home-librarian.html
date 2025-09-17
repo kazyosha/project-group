@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{librarian/layout-librarian}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ Admin</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="text-3xl font-bold mb-6">📊 Trang Chủ Admin</h1>
+
+    <!-- Cards thống kê -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white/80 backdrop-blur-md p-4 rounded shadow">
+            <div class="text-gray-500">📚 Sách hiện có</div>
+            <div class="text-2xl font-bold" th:text="${bookCount}">0</div>
+        </div>
+
+        <div class="bg-white/80 backdrop-blur-md p-4 rounded shadow">
+            <div class="text-gray-500">📂 Danh mục</div>
+            <div class="text-2xl font-bold" th:text="${categoryCount}">0</div>
+        </div>
+
+        <div class="bg-white/80 backdrop-blur-md p-4 rounded shadow">
+            <div class="text-gray-500">👤 Khách mượn</div>
+            <div class="text-2xl font-bold" th:text="${borrowerCount}">0</div>
+        </div>
+
+        <div class="bg-white/80 backdrop-blur-md p-4 rounded shadow">
+            <div class="text-gray-500">📝 Phiếu mượn</div>
+            <div class="text-2xl font-bold" th:text="${loanCount}">0</div>
+        </div>
+    </div>
+
+    <!-- Truy cập nhanh -->
+    <div class="mt-8">
+        <h2 class="text-xl font-semibold mb-4">⚡ Truy cập nhanh</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <a href="/books" class="block bg-blue-500 text-white p-4 rounded hover:bg-blue-600">📕 Quản lý Sách</a>
+            <a href="/categories" class="block bg-green-500 text-white p-4 rounded hover:bg-green-600">📂 Danh mục</a>
+            <a href="/borrowers" class="block bg-yellow-500 text-white p-4 rounded hover:bg-yellow-600">👤 Khách mượn</a>
+            <a href="/loans" class="block bg-red-500 text-white p-4 rounded hover:bg-red-600">📝 Phiếu mượn</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
