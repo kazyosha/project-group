@@ -1,9 +1,6 @@
 package com.c04.librarymanagement.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,9 +35,12 @@ public class UserDTO {
 
     private MultipartFile imageUrlFile;
 
-    @NotNull
+    @NotNull(message = "Ngày sinh không được để trống")
+    @Past(message = "Ngày sinh phải ở quá khứ")
     private LocalDate birthday;
 
+    @NotBlank(message = "Số điện thoại không được để trống")
+    @Pattern(regexp = "0\\d{9,10}", message = "Số điện thoại phải bắt đầu bằng 0 và có 10-11 số")
     private String phone;
 
     @NotBlank(message = "Vai trò không được để trống")

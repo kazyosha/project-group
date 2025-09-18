@@ -1,79 +1,110 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org"
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layout}">
-
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chỉnh sửa người dùng</title>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 </head>
-
 <body>
-<div layout:fragment="content" class="container py-5">
+<div layout:fragment="content" class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      <div class="card shadow-lg rounded-3">
+        <div class="card-header bg-warning text-white text-center">
+          <h4 class="mb-0">✏️ Chỉnh sửa người dùng</h4>
+        </div>
+        <div class="card-body">
+          <form th:action="@{/admin/users/update/{id}(id=${user.id})}"
+                th:object="${user}" method="post"
+                enctype="multipart/form-data">
 
-  <div class="card shadow-lg p-4 mx-auto" style="max-width: 750px;">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h3 class="text-primary m-0">✏️ Chỉnh sửa người dùng</h3>
-      <a th:href="@{/admin/users/list}" class="btn btn-outline-secondary btn-sm">
-        ⬅ Quay lại danh sách
-      </a>
-    </div>
+            <input type="hidden" th:field="*{id}"/>
 
-    <form th:action="@{/admin/users/update/{id}(id=${user.id})}"
-          th:object="${user}" method="post" enctype="multipart/form-data">
+            <!-- Họ & Tên -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">👤 Họ & Tên</label>
+              <input type="text" th:field="*{name}"
+                     th:classappend="${#fields.hasErrors('name')}? 'is-invalid' : ''"
+                     class="form-control" placeholder="Nhập tên đầy đủ" required/>
+              <div class="invalid-feedback"
+                   th:if="${#fields.hasErrors('name')}"
+                   th:errors="*{name}"></div>
+            </div>
 
-      <!-- Hidden ID -->
-      <input type="hidden" th:field="*{id}"/>
+            <!-- Email -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">📧 Email</label>
+              <input type="email" th:field="*{email}"
+                     th:classappend="${#fields.hasErrors('email')}? 'is-invalid' : ''"
+                     class="form-control" readonly/>
+              <div class="invalid-feedback"
+                   th:if="${#fields.hasErrors('email')}"
+                   th:errors="*{email}"></div>
+            </div>
 
-      <!-- Họ & Tên -->
-      <div class="mb-3">
-        <label for="name" class="form-label fw-bold">Họ & Tên</label>
-        <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nhập họ và tên" required>
-      </div>
+            <!-- Số điện thoại -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">📞 Số điện thoại</label>
+              <input type="text" th:field="*{phone}"
+                     th:classappend="${#fields.hasErrors('phone')}? 'is-invalid' : ''"
+                     class="form-control" placeholder="Nhập số điện thoại"/>
+              <div class="invalid-feedback"
+                   th:if="${#fields.hasErrors('phone')}"
+                   th:errors="*{phone}"></div>
+            </div>
 
-      <!-- Email -->
-      <div class="mb-3">
-        <label for="email" class="form-label fw-bold">Email</label>
-        <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Nhập email" required>
-      </div>
+            <!-- Mật khẩu -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">🔑 Mật khẩu mới</label>
+              <input type="password" th:field="*{password}"
+                     th:classappend="${#fields.hasErrors('password')}? 'is-invalid' : ''"
+                     class="form-control" placeholder="Để trống nếu không đổi"/>
+              <div class="invalid-feedback"
+                   th:if="${#fields.hasErrors('password')}"
+                   th:errors="*{password}"></div>
+            </div>
 
-      <!-- Mật khẩu -->
-      <div class="mb-3">
-        <label for="password" class="form-label fw-bold">Mật khẩu mới</label>
-        <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Để trống nếu không đổi">
-        <div class="form-text">Nhập nếu muốn đổi mật khẩu.</div>
-      </div>
+            <!-- Vai trò -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">⚡ Vai trò</label>
+              <select th:field="*{role}"
+                      th:classappend="${#fields.hasErrors('role')}? 'is-invalid' : ''"
+                      class="form-select" required>
+                <option value="" disabled>Chọn vai trò</option>
+                <option value="USER">USER</option>
+                <option value="LIBRARIAN">LIBRARIAN</option>
+                <option value="ADMIN">ADMIN</option>
+              </select>
+              <div class="invalid-feedback"
+                   th:if="${#fields.hasErrors('role')}"
+                   th:errors="*{role}"></div>
+            </div>
 
-      <!-- Vai trò -->
-      <div class="mb-3">
-        <label for="role" class="form-label fw-bold">Vai trò</label>
-        <select th:field="*{role}" class="form-select" id="role" required>
-          <option th:value="ADMIN" th:selected="${user.role == 'ADMIN'}">Admin</option>
-          <option th:value="LIBRARIAN" th:selected="${user.role == 'LIBRARIAN'}">Librarian</option>
-          <option th:value="USER" th:selected="${user.role == 'USER'}">User</option>
-        </select>
-      </div>
+            <!-- Ảnh đại diện -->
+            <div class="mb-4">
+              <label for="imageUrlFile" class="form-label fw-bold">Ảnh đại diện</label>
+              <input type="file" th:field="*{imageUrlFile}" class="form-control" id="imageUrlFile">
 
-      <!-- Ảnh đại diện -->
-      <div class="mb-4">
-        <label for="imageUrlFile" class="form-label fw-bold">Ảnh đại diện</label>
-        <input type="file" th:field="*{imageUrlFile}" class="form-control" id="imageUrlFile">
+              <div th:if="${user.imageUrl != null}" class="mt-3">
+                <p class="mb-1">Ảnh hiện tại:</p>
+                <img th:src="${user.imageUrl}" alt="Avatar" class="img-thumbnail rounded" style="max-width: 120px;">
+              </div>
+            </div>
 
-        <div th:if="${user.imageUrl != null}" class="mt-3">
-          <p class="mb-1">Ảnh hiện tại:</p>
-          <img th:src="${user.imageUrl}" alt="Avatar" class="img-thumbnail rounded" style="max-width: 120px;">
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+              <a th:href="@{/admin/users/list}" class="btn btn-outline-secondary">❌ Hủy</a>
+              <button type="submit" class="btn btn-success">💾 Cập nhật</button>
+            </div>
+
+          </form>
         </div>
       </div>
-
-      <!-- Action buttons -->
-      <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-success me-2">💾 Cập nhật</button>
-        <a th:href="@{/admin/users/list}" class="btn btn-secondary">❌ Hủy</a>
-      </div>
-    </form>
+    </div>
   </div>
-
 </div>
 </body>
 </html>

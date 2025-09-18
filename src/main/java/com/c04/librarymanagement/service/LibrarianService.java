@@ -80,6 +80,24 @@ public class LibrarianService implements ILibrarianService {
         userRepository.save(user);
     }
 
+    @Override
+    public void save(User currentUser) {
+        userRepository.save(currentUser);
+    }
+    @Override
+    public boolean checkOldPassword(Long userId, String oldPassword) {
+        User user = findEntityById(userId);
+        return passwordEncoder.matches(oldPassword, user.getPassword());
+    }
+
+    // 📌 Update mật khẩu mới
+    @Override
+    public void updatePassword(Long userId, String newPassword) {
+        User user = findEntityById(userId);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
     public LibrarianDTO findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(u -> LibrarianDTO.builder()

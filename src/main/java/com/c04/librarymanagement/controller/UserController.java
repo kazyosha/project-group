@@ -2,8 +2,10 @@ package com.c04.librarymanagement.controller;
 
 import com.c04.librarymanagement.dto.UserDTO;
 import com.c04.librarymanagement.service.Interface.IUserService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -44,21 +46,35 @@ public class UserController {
 
     // 📌 Lưu user
     @PostMapping
-    public String createUser(@ModelAttribute UserDTO userDTO) throws IOException {
+    public String createUser(@Valid @ModelAttribute("user") UserDTO userDTO,
+                             BindingResult result,
+                             Model model) throws IOException {
+        if (result.hasErrors()) {
+            // Nếu có lỗi -> quay lại form, kèm dữ liệu cũ và thông báo lỗi
+            return "admin/user/create-user";
+        }
+
+        // Nếu không lỗi -> lưu user
         userService.save(userDTO);
         return "redirect:/admin/users/list";
     }
 
     // 📌 Form sửa
-    @GetMapping("/view/{id}")
+    @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         UserDTO user = userService.getUserById(id);
         model.addAttribute("user", user);
-        return "/admin/user/edit-user";
+        return "admin/user/edit-user";
     }
     // 📌 Cập nhật user
     @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable Long id, @ModelAttribute("user") UserDTO userDTO) throws IOException {
+    public String updateUser(@PathVariable Long id,
+                             @Valid @ModelAttribute("user") UserDTO userDTO,
+                             BindingResult result,
+                             Model model) throws IOException {
+        if (result.hasErrors()) {
+            return "admin/user/edit-user"; // trả lại form kèm lỗi
+        }
         userDTO.setId(id);
         userService.updateUser(id, userDTO);
         return "redirect:/admin/users/list";

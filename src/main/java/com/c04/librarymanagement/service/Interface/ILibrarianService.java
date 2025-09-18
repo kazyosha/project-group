@@ -15,4 +15,11 @@ public interface ILibrarianService {
     LibrarianDTO findByEmail(String email);
 
     User findEntityByEmail(String email);
+
+    void save(User currentUser);
+
+    // 📌 Bổ sung cho chức năng đổi mật khẩu
+    boolean checkOldPassword(Long userId, String oldPassword);
+
+    void updatePassword(Long userId, String newPassword);
 }
