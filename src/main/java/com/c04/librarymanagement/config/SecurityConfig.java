@@ -35,6 +35,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/books").hasAnyRole("ADMIN", "LIBRARIAN")
                         .requestMatchers("/admin/categories").hasAnyRole("ADMIN", "LIBRARIAN")
                         .requestMatchers("/admin/borrows").hasAnyRole("ADMIN", "LIBRARIAN")
+                        .requestMatchers("/admin/borrows/create").hasAnyRole("ADMIN", "LIBRARIAN")
 
                         // ADMIN CRUD đầy đủ
                         .requestMatchers("/admin/users/**").hasRole("ADMIN")
