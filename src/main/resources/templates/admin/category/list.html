@@ -10,75 +10,70 @@
 
 </head>
 <body>
-<section layout:fragment="content">
-<div class="container mt-4">
+<section layout:fragment="content" id="page-content">
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Danh mục sách</h2>
+            <a th:href="@{/admin/categories/create}" class="btn btn-primary">+ Thêm mới</a>
+        </div>
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Danh mục sách</h2>
-        <a th:href="@{/admin/categories/create}" class="btn btn-primary">+ Thêm mới</a>
-    </div>
+        <!-- Thông báo -->
+        <div id="message">
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${errorMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
 
-    <!-- Thông báo thành công -->
-    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
-        <span th:text="${successMessage}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên</th>
+                        <th class="text-center">Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody id="categoryBody">
+                    <tr th:each="category, stat : ${categoryPage}">
+                        <td th:text="${categoryPage.number * categoryPage.size + stat.index + 1}"></td>
+                        <td th:text="${category.name}"></td>
+                        <td class="text-center" sec:authorize="hasRole('ADMIN')">
+                            <a th:href="@{'/admin/categories/edit/' + ${category.id}}" class="btn btn-warning btn-sm">Cập nhật</a>
+                            <form th:action="@{'/admin/categories/delete/' + ${category.id}}" method="post" style="display:inline">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
 
-    <!-- Thông báo lỗi -->
-    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <span th:text="${errorMessage}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
+                <!-- Pagination -->
+                <nav th:if="${categoryPage.totalPages > 1}">
+                    <ul class="pagination justify-content-center" id="categoryPagination">
+                        <li class="page-item" th:classappend="${categoryPage.first} ? 'disabled'">
+                            <a class="page-link" th:href="@{/admin/categories(page=${categoryPage.number - 1})}">«</a>
+                        </li>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                <tr>
-                    <th>ID</th>
-                    <th>Tên</th>
-                    <th class="text-center">Hành động</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="category, stat : ${categoryPage}">
-                    <td th:text="${categoryPage.number * categoryPage.size + stat.index + 1}"></td>
-                    <td th:text="${category.name}"></td>
-                    <td class="text-center" sec:authorize="hasRole('ADMIN')">
-                        <a th:href="@{'/admin/categories/edit/' + ${category.id}}"
-                           class="btn btn-warning btn-sm">Cập nhật</a>
-                        <form th:action="@{'/admin/categories/delete/' + ${category.id}}"
-                              method="post" style="display:inline">
-                            <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">
-                                Xóa
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <nav th:if="${categoryPage.totalPages > 1}">
-                <ul class="pagination justify-content-center">
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, categoryPage.totalPages - 1)}"
+                            th:classappend="${i == categoryPage.number} ? 'active'">
+                            <a class="page-link" th:href="@{/admin/categories(page=${i})}" th:text="${i + 1}"></a>
+                        </li>
 
-                    <li class="page-item" th:classappend="${categoryPage.first} ? 'disabled'">
-                        <a class="page-link" th:href="@{/admin/categories(page=${categoryPage.number - 1})}">«</a>
-                    </li>
-
-                    <li class="page-item" th:each="i : ${#numbers.sequence(0, categoryPage.totalPages - 1)}"
-                        th:classappend="${i == categoryPage.number} ? 'active'">
-                        <a class="page-link" th:href="@{/admin/categories(page=${i})}" th:text="${i + 1}">1</a>
-                    </li>
-
-                    <li class="page-item" th:classappend="${categoryPage.last} ? 'disabled'">
-                        <a class="page-link" th:href="@{/admin/categories(page=${categoryPage.number + 1})}">»</a>
-                    </li>
-
-                </ul>
-            </nav>
+                        <li class="page-item" th:classappend="${categoryPage.last} ? 'disabled'">
+                            <a class="page-link" th:href="@{/admin/categories(page=${categoryPage.number + 1})}">»</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
-</div>
 </section>
+
 </body>
 </html>

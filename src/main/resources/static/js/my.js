@@ -1,13 +1,18 @@
-//Search cho create book-loan
-$(document).ready(function() {
+// my.js - Quản lý borrows & search sinh viên
+console.log("✅ my.js loaded");
+
+function initBorrowList() {
+    // CSRF cho tất cả AJAX
     $(document).ajaxSend(function(e, xhr, options) {
         let token = $("meta[name='_csrf']").attr("content");
         let header = $("meta[name='_csrf_header']").attr("content");
         xhr.setRequestHeader(header, token);
     });
+
     let timer;
 
-    $('#studentInput').on('input', function() {
+    // --- Search sinh viên cho tạo borrow ---
+    $('#studentInput').off('input').on('input', function() {
         const query = $(this).val();
         clearTimeout(timer);
 
@@ -31,7 +36,7 @@ $(document).ready(function() {
         }, 300);
     });
 
-    $('#studentList').on('mousedown', 'li', function(e) {
+    $('#studentList').off('mousedown').on('mousedown', 'li', function(e) {
         const name = $(this).text();
         const id = $(this).data('id');
         $('#studentInput').val(name);
@@ -40,14 +45,14 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    $(document).on('click', function(e) {
+    $(document).off('click.borrowList').on('click.borrowList', function(e) {
         if (!$(e.target).closest('#studentInput, #studentList').length) {
             $('#studentList').empty();
         }
     });
 
-    //Sreach cho list customers
-    $("#searchBox").on("input", function () {
+    // --- Search customers ---
+    $("#searchBox").off('input.customers').on("input.customers", function () {
         let keyword = $(this).val();
         $.ajax({
             url: "/admin/customers/search",
@@ -82,35 +87,35 @@ $(document).ready(function() {
         });
     });
 
-    //search cho list borrows
+    // --- Load borrows ---
     function loadBorrows(page = 0) {
         let keyword = $("#searchBox").val();
         let status = $("#statusFilter").val();
 
         $.ajax({
             url: "/admin/borrows/search-list",
-            data: {keyword: keyword, status: status, page: page, size: 5},
+            data: {keyword, status, page, size: 5},
             success: function (data) {
                 let rows = "";
                 data.content.forEach(r => {
                     let details = r.borrowDetails.map(d => d.bookTitle).join(", ");
                     rows += `
-                            <tr>
-                                <td>${r.id}</td>
-                                <td>${r.customerName}</td>
-                                <td>${r.borrowDate || ""}</td>
-                                <td>${r.status}</td>
-                                <td>${details}</td>
-                                <td>
-                                      <form class="statusForm" data-id="${r.id}">
-                    <select name="status" class="form-select form-select-sm">
-                        <option value="BORROWING" ${r.status === 'BORROWING' ? 'selected' : ''}>Đang mượn</option>
-                        <option value="OVERDUE" ${r.status === 'OVERDUE' ? 'selected' : ''}>Quá hạn</option>
-                        <option value="RETURNED" ${r.status === 'RETURNED' ? 'selected' : ''}>Đã trả</option>
-                    </select>
-                </form>
-                                </td>
-                            </tr>`;
+                        <tr>
+                            <td>${r.id}</td>
+                            <td>${r.customerName}</td>
+                            <td>${r.borrowDate || ""}</td>
+                            <td>${r.status}</td>
+                            <td>${details}</td>
+                            <td>
+                                <form class="statusForm" data-id="${r.id}">
+                                    <select name="status" class="form-select form-select-sm">
+                                        <option value="BORROWING" ${r.status === 'BORROWING' ? 'selected' : ''}>Đang mượn</option>
+                                        <option value="OVERDUE" ${r.status === 'OVERDUE' ? 'selected' : ''}>Quá hạn</option>
+                                        <option value="RETURNED" ${r.status === 'RETURNED' ? 'selected' : ''}>Đã trả</option>
+                                    </select>
+                                </form>
+                            </td>
+                        </tr>`;
                 });
                 $("#borrowBody").html(rows);
 
@@ -122,7 +127,7 @@ $(document).ready(function() {
                     }
                     for (let i = 0; i < data.totalPages; i++) {
                         pagination += `<li class="page-item ${i === data.number ? 'active' : ''}">
-                                <a class="page-link" href="#" data-page="${i}">${i+1}</a></li>`;
+                            <a class="page-link" href="#" data-page="${i}">${i+1}</a></li>`;
                     }
                     if (!data.last) {
                         pagination += `<li class="page-item"><a class="page-link" href="#" data-page="${data.number+1}">»</a></li>`;
@@ -136,45 +141,33 @@ $(document).ready(function() {
     // Gọi lần đầu
     loadBorrows();
 
-    // Search realtime
-    $("#searchBox").on("input", function () {
-        loadBorrows(0);
-    });
-
-    // Filter theo status
-    $("#statusFilter").on("change", function () {
-        loadBorrows(0);
-    });
-
-    // Pagination click
-    $("#pagination").on("click", "a", function (e) {
+    // Search & filter & pagination
+    $("#searchBox").off('input.borrows').on("input.borrows", () => loadBorrows(0));
+    $("#statusFilter").off('change.borrows').on("change.borrows", () => loadBorrows(0));
+    $("#pagination").off('click.borrows').on("click.borrows", "a", function(e) {
         e.preventDefault();
         let page = $(this).data("page");
         loadBorrows(page);
     });
 
-    $("#borrowBody").on("change", "select[name='status']", function() {
+    // Update status
+    $("#borrowBody").off('change.status').on("change.status", "select[name='status']", function() {
         const form = $(this).closest(".statusForm");
         const borrowId = form.data("id");
         const status = $(this).val();
-
         let token = $("meta[name='_csrf']").attr("content");
         let header = $("meta[name='_csrf_header']").attr("content");
 
         $.ajax({
             url: `/admin/borrows/${borrowId}/status`,
             type: "POST",
-            data: { status: status },
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader(header, token);
-            },
-            success: function(response) {
-                console.log("Cập nhật thành công:", response);
-                form.closest("tr").find("td:eq(3)").text(status);
-            },
-            error: function(xhr) {
-                console.error("Lỗi khi cập nhật trạng thái:", xhr);
-            }
+            data: { status },
+            beforeSend: xhr => xhr.setRequestHeader(header, token),
+            success: () => form.closest("tr").find("td:eq(3)").text(status),
+            error: xhr => console.error("Lỗi khi cập nhật trạng thái:", xhr)
         });
     });
-});
+}
+
+// Khi reload.js load xong hoặc AJAX load nội dung mới
+if (typeof initBorrowList === "function") initBorrowList();

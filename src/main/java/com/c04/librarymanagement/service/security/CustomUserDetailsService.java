@@ -1,4 +1,4 @@
-package com.c04.librarymanagement.service;
+package com.c04.librarymanagement.service.security;
 
 import com.c04.librarymanagement.model.User;
 import com.c04.librarymanagement.repository.IAuthRepository;

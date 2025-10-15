@@ -4,7 +4,6 @@ import com.c04.librarymanagement.dto.LibrarianDTO;
 import com.c04.librarymanagement.dto.PasswordForm;
 import com.c04.librarymanagement.model.User;
 import com.c04.librarymanagement.service.Interface.ILibrarianService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -80,7 +79,7 @@ public class LibrarianController {
 
         librarianService.update(dto, avatar);
 
-        return "redirect:/home";
+        return "redirect:/admin";
     }
 
     @GetMapping("/account/change-password")

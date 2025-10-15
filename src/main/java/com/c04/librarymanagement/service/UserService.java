@@ -7,6 +7,7 @@ import com.c04.librarymanagement.model.User;
 import com.c04.librarymanagement.repository.IRoleRepository;
 import com.c04.librarymanagement.repository.IUserRepository;
 import com.c04.librarymanagement.service.Interface.IUserService;
+import com.c04.librarymanagement.service.UploadService.AvatarStorageService;
 import com.c04.librarymanagement.util.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
