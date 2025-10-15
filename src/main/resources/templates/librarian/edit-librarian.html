@@ -7,7 +7,7 @@
     <title>Chỉnh sửa tài khoản</title>
 </head>
 <body>
-<div layout:fragment="content" class="container mt-5">
+<section layout:fragment="content" id="page-content">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
             <div class="card shadow-lg rounded-3">
@@ -61,7 +61,7 @@
                             <input type="file" name="avatar" class="form-control"/>
                             <div class="mt-3 text-center">
                                 <img th:if="${librarian.imageUrl != null}"
-                                     th:src="@{'/uploads/' + ${librarian.imageUrl}}"
+                                     th:src="@{${librarian.imageUrl}}"
                                      class="rounded-circle border shadow-sm" width="120" height="120" alt="avatar"/>
                             </div>
                         </div>
@@ -80,6 +80,6 @@
             </div>
         </div>
     </div>
-</div>
+</section>
 </body>
 </html>

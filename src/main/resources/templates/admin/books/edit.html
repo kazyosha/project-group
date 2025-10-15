@@ -7,12 +7,11 @@
     <title>Chỉnh Sửa Sách</title>
 </head>
 <body>
-<section layout:fragment="content">
-    <div class="content">
+<section layout:fragment="content" id="page-content">
+    <div class="content container mt-3">
         <h2>✏️ Chỉnh Sửa Sách</h2>
 
         <form th:action="@{/admin/books/update}" th:object="${book}" method="post" enctype="multipart/form-data">
-
             <input type="hidden" th:field="*{id}"/>
 
             <!-- Tên sách -->
@@ -39,7 +38,7 @@
             <!-- Upload ảnh mới -->
             <div class="mb-3">
                 <label class="form-label">Tải ảnh mới</label>
-                <input type="file" th:field="*{imageFile}" class="form-control" onchange="previewImage(event,'previewEdit')"/>
+                <input type="file" th:field="*{imageFile}" class="form-control"/>
                 <img id="previewEdit" style="max-height:150px; margin-top:10px; display:none;"/>
                 <div class="text-danger" th:if="${#fields.hasErrors('imageFile')}" th:errors="*{imageFile}"></div>
             </div>
@@ -83,24 +82,30 @@
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         </form>
     </div>
-</section>
 
-<script>
-    function previewImage(event, previewId){
-        const input = event.target;
-        const output = document.getElementById(previewId);
-        if(input.files && input.files[0]){
-            const reader = new FileReader();
-            reader.onload = function(){
-                output.src = reader.result;
-                output.style.display = 'block';
+    <script>
+        function initEditBookFeatures(){
+            const fileInput = document.querySelector("input[type=file][th\\:field='*{imageFile}']");
+            if(fileInput){
+                fileInput.addEventListener("change", function(event){
+                    const output = document.getElementById('previewEdit');
+                    if(event.target.files && event.target.files[0]){
+                        const reader = new FileReader();
+                        reader.onload = function(){
+                            output.src = reader.result;
+                            output.style.display = 'block';
+                        }
+                        reader.readAsDataURL(event.target.files[0]);
+                    } else {
+                        output.src = '';
+                        output.style.display = 'none';
+                    }
+                });
             }
-            reader.readAsDataURL(input.files[0]);
-        } else {
-            output.src = '';
-            output.style.display = 'none';
         }
-    }
-</script>
+
+        if(typeof initMyFeatures === "function") initEditBookFeatures();
+    </script>
+</section>
 </body>
 </html>

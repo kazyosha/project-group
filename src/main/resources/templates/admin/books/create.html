@@ -7,8 +7,8 @@
     <title>Thêm Sách Mới</title>
 </head>
 <body>
-<section layout:fragment="content">
-    <div class="content">
+<section layout:fragment="content" id="page-content">
+    <div class="content container mt-3">
         <h2>📚 Thêm Sách Mới</h2>
 
         <form th:action="@{/admin/books/create}" th:object="${book}" method="post" enctype="multipart/form-data">
@@ -74,24 +74,35 @@
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         </form>
     </div>
+
+    <script>
+        // Gói trong function để reload.js có thể gọi lại
+        function initBookFormFeatures(){
+            function previewImage(event, previewId){
+                const input = event.target;
+                const output = document.getElementById(previewId);
+                if(input.files && input.files[0]){
+                    const reader = new FileReader();
+                    reader.onload = function(){
+                        output.src = reader.result;
+                        output.style.display = 'block';
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    output.src = '';
+                    output.style.display = 'none';
+                }
+            }
+
+            // Gắn lại onchange nếu cần
+            const fileInput = document.querySelector("input[type=file][th\\:field='*{imageFile}']");
+            if(fileInput) fileInput.addEventListener("change", e => previewImage(e,'previewCreate'));
+        }
+
+        // Gọi luôn khi load trực tiếp
+        if(typeof initMyFeatures === "function") initBookFormFeatures();
+    </script>
 </section>
 
-<script>
-    function previewImage(event, previewId){
-        const input = event.target;
-        const output = document.getElementById(previewId);
-        if(input.files && input.files[0]){
-            const reader = new FileReader();
-            reader.onload = function(){
-                output.src = reader.result;
-                output.style.display = 'block';
-            }
-            reader.readAsDataURL(input.files[0]);
-        } else {
-            output.src = '';
-            output.style.display = 'none';
-        }
-    }
-</script>
 </body>
 </html>

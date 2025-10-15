@@ -13,69 +13,88 @@
 </head>
 <body class="container mt-5">
 <section layout:fragment="content">
-<div class="card shadow p-4">
-    <h3 class="mb-3">📋 Danh sách khách hàng</h3>
+    <div class="card shadow p-4">
+        <h3 class="mb-3">📋 Danh sách khách hàng</h3>
 
-    <div class="mb-3">
-        <a th:href="@{/admin/customers/create}" class="btn btn-primary">➕ Thêm khách hàng</a>
-        <a th:href="@{/admin/customers/deleted}" class="btn btn-danger">🗑️ Thùng rác</a>
+        <div class="mb-3 d-flex gap-2">
+            <a th:href="@{/admin/customers/create}" class="btn btn-primary">➕ Thêm khách hàng</a>
+            <a th:href="@{/admin/customers/deleted}" class="btn btn-danger">🗑️ Thùng rác</a>
+        </div>
+
+        <input id="searchBox" type="text" class="form-control mb-3" placeholder="Tìm theo tên hoặc mã KH...">
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped align-middle">
+                <thead class="table-dark text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Mã KH</th>
+                    <th>Tên</th>
+                    <th>Lớp</th>
+                    <th>Địa chỉ</th>
+                    <th>Ngày sinh</th>
+                    <th class="text-center">Hành động</th>
+                </tr>
+                </thead>
+                <tbody id="customersBody">
+                <tr th:each="c : ${customers}" class="text-center">
+                    <td th:text="${c.id}"></td>
+                    <td th:text="${c.code}"></td>
+                    <td th:text="${c.name}"></td>
+                    <td th:text="${c.schoolClass}"></td>
+                    <td th:text="${c.address}"></td>
+                    <td th:text="${c.birthDate}"></td>
+                    <td class="text-center">
+                        <a th:href="@{'/admin/customers/' + ${c.id} + '/edit'}" class="btn btn-sm btn-warning">✏️ Sửa</a>
+                        <a th:href="@{'/admin/customers/' + ${c.id} + '/delete'}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Bạn có chắc muốn xóa khách hàng này không?')">🗑️ Xóa</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <nav th:if="${customersPage.totalPages > 1}">
+            <ul class="pagination justify-content-center">
+                <!-- Previous -->
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/customers(page=${currentPage - 1})}">«</a>
+                </li>
+
+                <!-- Page numbers -->
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, customersPage.totalPages)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link" th:href="@{/admin/customers(page=${i})}" th:text="${i}">1</a>
+                </li>
+
+                <!-- Next -->
+                <li class="page-item" th:classappend="${currentPage == customersPage.totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/customers(page=${currentPage + 1})}">»</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
-    <input id="searchBox" type="text" class="form-control me-2" placeholder="Tìm theo tên hoặc mã KH...">
+    <script>
+        // Tìm kiếm nhanh theo tên hoặc mã KH
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchBox = document.getElementById("searchBox");
+            const tableBody = document.getElementById("customersBody");
 
-    <table class="table table-bordered table-striped align-middle">
-        <thead class="table-dark">
-        <tr>
-            <th>ID</th>
-            <th>Mã KH</th>
-            <th>Tên</th>
-            <th>Lớp</th>
-            <th>Địa chỉ</th>
-            <th>Ngày sinh</th>
-            <th class="text-center">Hành động</th>
-        </tr>
-        </thead>
-        <tbody id="customersBody">
-        <tr th:each="c : ${customers}">
-            <td th:text="${c.id}"></td>
-            <td th:text="${c.code}"></td>
-            <td th:text="${c.name}"></td>
-            <td th:text="${c.schoolClass}"></td>
-            <td th:text="${c.address}"></td>
-            <td th:text="${c.birthDate}"></td>
-            <td class="text-center">
-                <a th:href="@{'/admin/customers/' + ${c.id} + '/edit'}"
-                   class="btn btn-sm btn-warning">✏️ Sửa</a>
-                <a th:href="@{'/admin/customers/' + ${c.id} + '/delete'}"
-                   class="btn btn-sm btn-danger"
-                   onclick="return confirm('Bạn có chắc muốn xóa khách hàng này không?')">🗑️ Xóa</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+            searchBox.addEventListener("input", function () {
+                const filter = searchBox.value.toLowerCase();
+                const rows = tableBody.querySelectorAll("tr");
 
-    <!-- Pagination -->
-    <nav th:if="${customersPage.totalPages > 1}">
-        <ul class="pagination justify-content-center">
-            <!-- Previous -->
-            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/customers(page=${currentPage - 1})}">«</a>
-            </li>
-
-            <!-- Page numbers -->
-            <li class="page-item" th:each="i : ${#numbers.sequence(1, customersPage.totalPages)}"
-                th:classappend="${i == currentPage} ? 'active'">
-                <a class="page-link" th:href="@{/admin/customers(page=${i})}" th:text="${i}">1</a>
-            </li>
-
-            <!-- Next -->
-            <li class="page-item" th:classappend="${currentPage == customersPage.totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/customers(page=${currentPage + 1})}">»</a>
-            </li>
-        </ul>
-    </nav>
-
-</div>
+                rows.forEach(row => {
+                    const name = row.cells[2].textContent.toLowerCase();
+                    const code = row.cells[1].textContent.toLowerCase();
+                    row.style.display = (name.includes(filter) || code.includes(filter)) ? "" : "none";
+                });
+            });
+        });
+    </script>
 </section>
 </body>
 </html>

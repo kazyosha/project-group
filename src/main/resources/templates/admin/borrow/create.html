@@ -10,31 +10,75 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body class="container mt-5">
-<section layout:fragment="content">
-<div class="card p-4 shadow">
-    <h3>➕ Tạo phiếu mượn</h3>
-    <form th:action="@{/admin/borrows/create}" th:object="${borrow}" method="post">
+<section layout:fragment="content" id="page-content">
+    <div class="card p-4 shadow container mt-3">
+        <h3>➕ Tạo phiếu mượn</h3>
+        <form th:action="@{/admin/borrows/create}" th:object="${borrow}" method="post">
+            <!-- Sinh viên (autocomplete) -->
+            <div class="mb-3 position-relative">
+                <label>Chọn sinh viên</label>
+                <input type="text" id="studentInput" class="form-control" placeholder="Nhập tên hoặc mã sinh viên" autocomplete="off">
+                <input type="hidden" name="customerId" th:field="*{customerId}" id="studentId">
+                <ul id="studentList" class="list-group position-absolute w-100" style="z-index:1000; max-height:200px; overflow-y:auto;"></ul>
+            </div>
 
-        <!-- Sinh viên (autocomplete) -->
-        <div class="mb-3 position-relative">
-            <label>Chọn sinh viên</label>
-            <input type="text" id="studentInput" class="form-control" placeholder="Nhập tên hoặc mã sinh viên" autocomplete="off">
-            <input type="hidden" name="customerId" th:field="*{customerId}" id="studentId">
-            <ul id="studentList" class="list-group position-absolute w-100" style="z-index:1000; max-height:200px; overflow-y:auto;"></ul>
-        </div>
+            <!-- Chọn sách -->
+            <div class="mb-3">
+                <label>Chọn sách</label>
+                <select multiple class="form-select" th:field="*{bookIds}">
+                    <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title}"></option>
+                </select>
+                <small class="text-muted">Giữ Ctrl hoặc Cmd để chọn nhiều sách</small>
+            </div>
 
-        <!-- Chọn sách -->
-        <div class="mb-3">
-            <label>Chọn sách</label>
-            <select multiple class="form-select" th:field="*{bookIds}">
-                <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title}"></option>
-            </select>
-            <small class="text-muted">Giữ Ctrl hoặc Cmd để chọn nhiều sách</small>
-        </div>
+            <button type="submit" class="btn btn-primary">Tạo phiếu mượn</button>
+        </form>
+    </div>
 
-        <button type="submit" class="btn btn-primary">Tạo phiếu mượn</button>
-    </form>
-</div>
+    <script>
+        function initBorrowFormFeatures(){
+            const studentInput = document.getElementById('studentInput');
+            const studentList = document.getElementById('studentList');
+            const studentId = document.getElementById('studentId');
+
+            studentInput.addEventListener('keyup', function(){
+                const query = this.value.trim();
+                if(query.length < 1){
+                    studentList.innerHTML = '';
+                    return;
+                }
+
+                $.ajax({
+                    url: '/admin/customers/search',
+                    type: 'GET',
+                    data: { q: query },
+                    success: function(data){
+                        studentList.innerHTML = '';
+                        data.forEach(c => {
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item list-group-item-action';
+                            li.textContent = `${c.code} - ${c.name}`;
+                            li.style.cursor = 'pointer';
+                            li.addEventListener('click', function(){
+                                studentInput.value = c.name;
+                                studentId.value = c.id;
+                                studentList.innerHTML = '';
+                            });
+                            studentList.appendChild(li);
+                        });
+                    }
+                });
+            });
+
+            document.addEventListener('click', function(e){
+                if(!studentList.contains(e.target) && e.target !== studentInput){
+                    studentList.innerHTML = '';
+                }
+            });
+        }
+
+        if(typeof initMyFeatures === "function") initBorrowFormFeatures();
+    </script>
 </section>
 </body>
 </html>
