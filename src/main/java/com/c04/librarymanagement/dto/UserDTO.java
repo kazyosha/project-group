@@ -35,8 +35,8 @@ public class UserDTO {
 
     private MultipartFile imageUrlFile;
 
-    @NotNull(message = "Ngày sinh không được để trống")
-    @Past(message = "Ngày sinh phải ở quá khứ")
+//    @NotNull(message = "Ngày sinh không được để trống")
+//    @Past(message = "Ngày sinh phải ở quá khứ")
     private LocalDate birthday;
 
     @NotBlank(message = "Số điện thoại không được để trống")

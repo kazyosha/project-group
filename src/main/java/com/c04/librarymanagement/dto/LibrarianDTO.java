@@ -22,8 +22,8 @@ public class LibrarianDTO {
     @NotBlank(message = "Email không được để trống")
     private String email;
 
-    @Size(min = 6, message = "Mật khẩu ít nhất 6 ký tự")
-    private String password; // có thể trống nếu không đổi
+//    @Size(min = 6, message = "Mật khẩu ít nhất 6 ký tự")
+//    private String password; // có thể trống nếu không đổi
 
     private String imageUrl; // avatar hiện tại
     private MultipartFile avatarFile; // file upload mới

@@ -33,7 +33,9 @@ public class SecurityConfig {
 
                         // LIBRARIAN có thể xem danh sách trước
                         .requestMatchers("/admin/books").hasAnyRole("ADMIN", "LIBRARIAN")
+                        .requestMatchers("/admin/books/create").hasAnyRole("ADMIN", "LIBRARIAN")
                         .requestMatchers("/admin/categories").hasAnyRole("ADMIN", "LIBRARIAN")
+                        .requestMatchers("/admin/categories/create").hasAnyRole("ADMIN", "LIBRARIAN")
                         .requestMatchers("/admin/borrows").hasAnyRole("ADMIN", "LIBRARIAN")
                         .requestMatchers("/admin/borrows/create").hasAnyRole("ADMIN", "LIBRARIAN")
 
@@ -41,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/users/**").hasRole("ADMIN")
                         .requestMatchers("/admin/books/**").hasRole("ADMIN")
                         .requestMatchers("/admin/categories/**").hasRole("ADMIN")
-                        .requestMatchers("/admin/borrows/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/borrows/**").hasAnyRole("ADMIN", "LIBRARIAN")
 
                         // Librarian pages
                         .requestMatchers("/librarian/**").hasRole("LIBRARIAN")

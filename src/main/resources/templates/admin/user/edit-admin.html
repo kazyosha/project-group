@@ -22,6 +22,8 @@
 
     <form th:action="@{/admin/profile/update}" th:object="${admin}" method="post">
 
+      <input type="hidden" th:field="*{id}">
+
       <!-- Họ & Tên -->
       <div class="mb-3">
         <label for="name" class="form-label fw-bold">Họ & Tên</label>

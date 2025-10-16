@@ -47,14 +47,14 @@
                             <div class="invalid-feedback" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
                         </div>
 
-                        <!-- Mật khẩu -->
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">🔑 Mật khẩu mới</label>
-                            <input type="password" th:field="*{password}"
-                                   th:classappend="${#fields.hasErrors('password')}? 'is-invalid' : ''"
-                                   class="form-control" placeholder="Để trống nếu không đổi"/>
-                            <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-                        </div>
+<!--                        &lt;!&ndash; Mật khẩu &ndash;&gt;-->
+<!--                        <div class="mb-3">-->
+<!--                            <label class="form-label fw-bold">🔑 Mật khẩu mới</label>-->
+<!--                            <input type="password" th:field="*{password}"-->
+<!--                                   th:classappend="${#fields.hasErrors('password')}? 'is-invalid' : ''"-->
+<!--                                   class="form-control" placeholder="Để trống nếu không đổi"/>-->
+<!--                            <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>-->
+<!--                        </div>-->
 
                         <!-- Ảnh đại diện -->
                         <div class="mb-3"> <label class="form-label fw-bold">🖼️ Ảnh đại diện</label>

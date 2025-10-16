@@ -59,9 +59,9 @@ public class LibrarianService implements ILibrarianService {
         user.setName(dto.getName());
         user.setPhone(dto.getPhone());
 
-        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
-            user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        }
+//        if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
+//            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+//        }
 
         if (avatar != null && !avatar.isEmpty()) {
             try {

@@ -61,21 +61,21 @@ public class UserController {
 
     // 📌 Form sửa
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
+    public String showEditForm(@PathVariable("id") Long id, Model model) {
         UserDTO user = userService.getUserById(id);
         model.addAttribute("user", user);
         return "admin/user/edit-user";
     }
     // 📌 Cập nhật user
     @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable Long id,
+    public String updateUser(@PathVariable("id") Long id,
                              @Valid @ModelAttribute("user") UserDTO userDTO,
-                             BindingResult result,
-                             Model model) throws IOException {
+                             BindingResult result
+                            ) throws IOException {
+        System.out.println(userDTO.toString());
         if (result.hasErrors()) {
-            return "admin/user/edit-user"; // trả lại form kèm lỗi
+            return "admin/user/edit-user";
         }
-        userDTO.setId(id);
         userService.updateUser(id, userDTO);
         return "redirect:/admin/users/list";
     }
