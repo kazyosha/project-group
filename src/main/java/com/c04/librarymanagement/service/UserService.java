@@ -11,12 +11,14 @@ import com.c04.librarymanagement.service.UploadService.AvatarStorageService;
 import com.c04.librarymanagement.util.ResourceNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserService implements IUserService {
 
     private final IUserRepository userRepository;

@@ -6,11 +6,13 @@ import com.c04.librarymanagement.model.BorrowStatus;
 import com.c04.librarymanagement.service.BookService;
 import com.c04.librarymanagement.service.BorrowService;
 import com.c04.librarymanagement.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,7 +47,13 @@ public class BorrowController {
     }
 
     @PostMapping("/borrows/create")
-    public String createBorrow(@ModelAttribute("borrow") BorrowRecordDTO dto) {
+    public String createBorrow(@Valid @ModelAttribute("borrow") BorrowRecordDTO dto,
+                               BindingResult result,
+                               Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("books", bookService.getAllBooks());
+            return "admin/borrow/create";
+        }
         borrowService.createBorrowRecord(dto);
         return "redirect:/admin/borrows";
     }

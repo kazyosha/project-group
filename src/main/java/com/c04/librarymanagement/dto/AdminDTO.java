@@ -9,7 +9,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
 public class AdminDTO {
     private Long id;
     private String name;

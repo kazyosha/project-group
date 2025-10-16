@@ -53,6 +53,4 @@ public class AdminService implements IAdminservice {
         userRepository.save(admin);
         return adminDTO;
     }
-
-
 }

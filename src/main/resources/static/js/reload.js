@@ -22,7 +22,12 @@ document.addEventListener("DOMContentLoaded", function () {
                         <p class="mt-3">Đang tải nội dung...</p>
                     </div>`;
 
-                fetch(href, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+                fetch(href, {
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        credentials: "same-origin"
+                    }
+                })
                     .then(r => r.text())
                     .then(html => {
                         const parser = new DOMParser();
@@ -50,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Back/forward
         window.addEventListener("popstate", () => {
-            fetch(location.pathname, { headers: { "X-Requested-With": "XMLHttpRequest" } })
+            fetch(location.pathname, {headers: {"X-Requested-With": "XMLHttpRequest"}})
                 .then(r => r.text())
                 .then(html => {
                     const parser = new DOMParser();
